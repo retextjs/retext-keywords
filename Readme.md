@@ -1,9 +1,5 @@
 # retext-keywords [![Build Status](https://travis-ci.org/wooorm/retext-keywords.svg?branch=master)](https://travis-ci.org/wooorm/retext-keywords) [![Coverage Status](https://img.shields.io/coveralls/wooorm/retext-keywords.svg)](https://coveralls.io/r/wooorm/retext-keywords?branch=master)
 
-[![browser support](https://ci.testling.com/wooorm/retext-keywords.png) ](https://ci.testling.com/wooorm/retext-keywords)
-
----
-
 Keyword extraction with **[Retext](https://github.com/wooorm/retext)**.
 
 ## Installation

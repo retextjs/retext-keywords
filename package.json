@@ -42,21 +42,5 @@
     "build-browser-test": "node_modules/.bin/browserify spec/retext-keywords.spec.js -o spec/browser.spec.js",
     "benchmark": "node_modules/.bin/matcha",
     "make": "npm run lint && npm run coverage"
-  },
-  "testling": {
-    "files": "spec/retext-keywords.spec.js",
-    "harness": "mocha",
-    "browsers": [
-      "iexplore/latest",
-      "chrome/latest",
-      "chrome/canary",
-      "firefox/latest",
-      "firefox/nightly",
-      "opera/latest",
-      "opera/next",
-      "safari/latest",
-      "iphone/latest",
-      "android-browser/latest"
-    ]
   }
 }
