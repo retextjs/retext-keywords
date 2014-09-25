@@ -38,8 +38,6 @@
     "lint-style": "node_modules/.bin/jscs index.js spec/retext-keywords.spec.js benchmark/index.js --reporter=inline",
     "lint-benchmark": "node_modules/.bin/eslint benchmark/index.js --env node --global suite,set,bench --rule 'quotes: [2, single]'",
     "coverage": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -- spec/retext-keywords.spec.js",
-    "install-browser-test": "npm install browserify",
-    "build-browser-test": "node_modules/.bin/browserify spec/retext-keywords.spec.js -o spec/browser.spec.js",
     "benchmark": "node_modules/.bin/matcha",
     "make": "npm run lint && npm run coverage"
   }
