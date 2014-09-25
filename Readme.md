@@ -190,4 +190,4 @@ On a MacBook Air, `keywords()` runs about 3,041 op/s on a section / small articl
 
 ## License
 
-  MIT
+MIT © Titus Wormer
