@@ -1,30 +1,73 @@
 'use strict';
 
-var pos = require('retext-pos'),
-    stemmer = require('retext-porter-stemmer'),
-    visit = require('retext-visit');
+/**
+ * Module dependencies.
+ */
 
-exports = module.exports = function () {};
+var pos,
+    stemmer,
+    visit;
+
+pos = require('retext-pos');
+stemmer = require('retext-porter-stemmer');
+visit = require('retext-visit');
+
+/**
+ * Constants.
+ */
+
+var has;
+
+has = Object.prototype.hasOwnProperty;
+
+/**
+ * Define `keywords`.
+ */
+
+function keywords() {}
+
+/**
+ * Reverse sort: from 9 to 0.
+ *
+ * @param {number} a
+ * @param {number} b
+ */
 
 function reverseSort(a, b) {
     return b - a;
 }
 
-function interpolate(value, min, max) {
-    return min + value * (max - min);
-}
+/**
+ * Get the top results from an occurance map.
+ *
+ * @param {Object.<string, Object>} results - Dictionary of
+ *   stems mapping to objects containing `nodes`, `stem`,
+ *   and `score` properties.
+ * @param {number} minimum - Minimum number of results to
+ *   return.
+ * @return {Array.<Object>}
+ */
 
 function filterResults(results, minimum) {
-    var filteredResults = [],
-        matrix = {},
-        indices = [],
-        column, key, score, interpolatedScore, iterator, otherIterator,
+    var filteredResults,
+        matrix,
+        indices,
+        column,
+        key,
+        score,
+        interpolatedScore,
+        index,
+        otherIndex,
         maxScore;
+
+    filteredResults = [];
+    indices = [];
+    matrix = {};
 
     for (key in results) {
         score = results[key].score;
 
-        if (!(score in matrix)) {
+        if (!has.call(matrix, score)) {
             matrix[score] = [];
             indices.push(score);
         }
@@ -33,19 +76,20 @@ function filterResults(results, minimum) {
     }
 
     indices.sort(reverseSort);
+
     maxScore = indices[0];
 
-    iterator = -1;
+    index = -1;
 
-    while (indices[++iterator]) {
-        score = indices[iterator];
+    while (indices[++index]) {
+        score = indices[index];
         column = matrix[score];
 
-        interpolatedScore = interpolate(score / maxScore, 0, 1);
-        otherIterator = -1;
+        interpolatedScore = score / maxScore;
+        otherIndex = -1;
 
-        while (column[++otherIterator]) {
-            column[otherIterator].score = interpolatedScore;
+        while (column[++otherIndex]) {
+            column[otherIndex].score = interpolatedScore;
         }
 
         filteredResults = filteredResults.concat(column);
@@ -58,7 +102,14 @@ function filterResults(results, minimum) {
     return filteredResults;
 }
 
-function isKeyWord(node) {
+/**
+ * Get whether or not a `node` is important.
+ *
+ * @param {Node} node
+ * @return {boolean}
+ */
+
+function isImportant(node) {
     return (
         node &&
         node.type === 'WordNode' &&
@@ -72,51 +123,82 @@ function isKeyWord(node) {
     );
 }
 
-function getKeywords(node) {
-    var keywords = {};
+/**
+ * Get most important words in `node`.
+ *
+ * @param {Node} node
+ * @return {Array.<Object>}
+ */
+
+function getImportantWords(node) {
+    var importantWords;
+
+    importantWords = {};
 
     node.visitType(node.WORD_NODE, function (word) {
         var stem;
 
-        if (isKeyWord(word)) {
+        if (isImportant(word)) {
             stem = word.data.stem.toLowerCase();
 
-            if (!(stem in keywords)) {
-                keywords[stem] = {
+            if (!has.call(importantWords, stem)) {
+                importantWords[stem] = {
                     'nodes' : [word],
                     'stem' : stem,
                     'score' : 1
                 };
             } else {
-                keywords[stem].nodes.push(word);
-                keywords[stem].score++;
+                importantWords[stem].nodes.push(word);
+                importantWords[stem].score++;
             }
         }
     });
 
-    return keywords;
+    return importantWords;
 }
 
-function getFilteredKeywords(options) {
-    if (!options) {
-        options = {};
-    }
+/**
+ * Get the top important words in `self`.
+ *
+ * @param {Object?} options
+ * @param {number?} options.minimum
+ * @this {Node} node
+ * @return {Array.<Object>}
+ */
 
-    return filterResults(
-        getKeywords(this),
-        'minimum' in options ? options.minimum : 5
-    );
+function getKeywords(options) {
+    var minimum;
+
+    minimum = options && has.call(options, 'minimum') ? options.minimum : 5;
+
+    return filterResults(getImportantWords(this), minimum);
 }
 
-function findPhraseInDirection(node, property) {
-    var nodes = [], stems = [], words = [], queue = [];
+/**
+ * Get following or preceding important words or white space.
+ *
+ * @param {Node} node
+ * @param {string} direction - either "prev" or "next".
+ * @return {Object}
+ */
 
-    node = node[property];
+function findPhraseInDirection(node, direction) {
+    var nodes,
+        stems,
+        words,
+        queue;
+
+    nodes = [];
+    stems = [];
+    words = [];
+    queue = [];
+
+    node = node[direction];
 
     while (node) {
         if (node.type === node.WHITE_SPACE_NODE) {
             queue.push(node);
-        } else if (isKeyWord(node)) {
+        } else if (isImportant(node)) {
             nodes = nodes.concat(queue, [node]);
             words.push(node);
             stems.push(node.data.stem.toLowerCase());
@@ -125,7 +207,7 @@ function findPhraseInDirection(node, property) {
             break;
         }
 
-        node = node[property];
+        node = node[direction];
     }
 
     return {
@@ -135,9 +217,26 @@ function findPhraseInDirection(node, property) {
     };
 }
 
-function merge(prev, value, next) {
-    return prev.reverse().concat([value], next);
+/**
+ * Merge a previous array, with a current value, and
+ * a following array.
+ *
+ * @param {Array.<*>} prev
+ * @param {*} current
+ * @param {Array.<*>} next
+ * @return {Array.<*>}
+ */
+
+function merge(prev, current, next) {
+    return prev.reverse().concat([current], next);
 }
+
+/**
+ * Find the phrase surrounding a node.
+ *
+ * @param {Node} node
+ * @return {Object}
+ */
 
 function findPhrase(node) {
     var prev = findPhraseInDirection(node, 'prev'),
@@ -151,57 +250,95 @@ function findPhrase(node) {
     };
 }
 
+/**
+ * Get the top important phrases in `self`.
+ *
+ * @param {Object?} options
+ * @param {number?} options.minimum
+ * @this {Node} node
+ * @return {Array.<Object>}
+ */
+
 function getKeyphrases(options) {
-    var simplePhrases = {},
-        initialWords = [],
-        simplePhrase, iterator, otherIterator, keywords, keyword, nodes,
-        phrase, stems, score;
+    var stemmedPhrases,
+        initialWords,
+        stemmedPhrase,
+        index,
+        otherIndex,
+        importantWords,
+        keyword,
+        nodes,
+        phrase,
+        stems,
+        minimum,
+        score;
 
-    if (!options) {
-        options = {};
-    }
+    stemmedPhrases = {};
+    initialWords = [];
 
-    keywords = getKeywords(this);
+    minimum = options && has.call(options, 'minimum') ? options.minimum : 5;
 
-    /* Iterate over all grouped keywords... */
-    for (keyword in keywords) {
-        nodes = keywords[keyword].nodes;
+    importantWords = getImportantWords(this);
 
-        iterator = -1;
+    /**
+     * Iterate over all grouped important words...
+     */
 
-        /* Iterate over every occurence of a certain keyword... */
-        while (nodes[++iterator]) {
-            /* Detect the phrase the node is in. */
-            phrase = findPhrase(nodes[iterator]);
+    for (keyword in importantWords) {
+        nodes = importantWords[keyword].nodes;
 
-            /* If we've already detected the same (simplified) phrase
-             * somewhere... */
-            if (phrase.value in simplePhrases) {
-                simplePhrase = simplePhrases[phrase.value];
+        index = -1;
 
-                /* Add weight per phrase to the score of the phrase. */
-                simplePhrase.score += simplePhrase.weight;
+        /**
+         * Iterate over every occurence of a certain keyword...
+         */
 
-                /* If this is the first time we walk over the phrase (exact
-                 * match, at another position), add it to the list of
-                 * matching phrases. */
+        while (nodes[++index]) {
+            phrase = findPhrase(nodes[index]);
+
+            /**
+             * If we've detected the same stemmed
+             * phrase somewhere.
+             */
+
+            if (has.call(stemmedPhrases, phrase.value)) {
+                stemmedPhrase = stemmedPhrases[phrase.value];
+
+                /**
+                 * Add weight per phrase to the score of
+                 * the phrase.
+                 */
+
+                stemmedPhrase.score += stemmedPhrase.weight;
+
+                /**
+                 * If this is the first time we walk over
+                 * the phrase (exact match but containing
+                 * another important word), add it to the
+                 * list of matching phrases.
+                 */
+
                 if (initialWords.indexOf(phrase.nodes[0]) === -1) {
                     initialWords.push(phrase.nodes[0]);
-                    simplePhrase.nodes.push(phrase.nodes);
+                    stemmedPhrase.nodes.push(phrase.nodes);
                 }
-            /* Otherwise... */
             } else {
-                otherIterator = -1;
+                otherIndex = -1;
                 score = -1;
                 stems = phrase.stems;
+
                 initialWords.push(phrase.nodes[0]);
 
-                /* For every stem in phrase, add its score to score. */
-                while (stems[++otherIterator]) {
-                    score += keywords[stems[otherIterator]].score;
+                /**
+                 * For every stem in phrase, add its
+                 * score to score.
+                 */
+
+                while (stems[++otherIndex]) {
+                    score += importantWords[stems[otherIndex]].score;
                 }
 
-                simplePhrases[phrase.value] = {
+                stemmedPhrases[phrase.value] = {
                     'score' : score,
                     'weight' : score,
                     'stems' : stems,
@@ -212,34 +349,59 @@ function getKeyphrases(options) {
         }
     }
 
-    /* Iterate over all grouped phrases... */
-    for (simplePhrase in simplePhrases) {
-        phrase = simplePhrases[simplePhrase];
+    for (stemmedPhrase in stemmedPhrases) {
+        phrase = stemmedPhrases[stemmedPhrase];
 
-        /* Modify its score to be the rounded result of multiplying it with
-         * the number of occurances, and dividing it by the ammount of words
-         * in the phrase. */
+        /**
+         * Modify its score to be the rounded result of
+         * multiplying it with the number of occurances,
+         * and dividing it by the ammount of words in the
+         * phrase.
+         */
+
         phrase.score = Math.round(
             phrase.score * phrase.nodes.length / phrase.stems.length
         );
     }
 
-    return filterResults(
-        simplePhrases,
-        'minimum' in options ? options.minimum : 5
-    );
+    return filterResults(stemmedPhrases, minimum);
 }
+
+/**
+ * Define `attach`.
+ *
+ * @param {Retext}
+ */
 
 function attach(retext) {
-    var TextOM = retext.parser.TextOM;
+    var TextOM,
+        parentPrototype,
+        elementPrototype;
 
-    retext.use(stemmer).use(pos).use(visit);
+    TextOM = retext.TextOM;
+    parentPrototype = TextOM.Parent.prototype;
+    elementPrototype = TextOM.Element.prototype;
 
-    TextOM.Parent.prototype.keywords = TextOM.Element.prototype.keywords =
-        getFilteredKeywords;
+    retext
+        .use(stemmer)
+        .use(pos)
+        .use(visit);
 
-    TextOM.Parent.prototype.keyphrases = TextOM.Element.prototype.keyphrases =
-        getKeyphrases;
+    parentPrototype.keywords = getKeywords;
+    elementPrototype.keywords = getKeywords;
+
+    parentPrototype.keyphrases = getKeyphrases;
+    elementPrototype.keyphrases = getKeyphrases;
 }
 
-exports.attach = attach;
+/**
+ * Expose `attach`.
+ */
+
+keywords.attach = attach;
+
+/**
+ * Expose `keywords`.
+ */
+
+module.exports = keywords;
