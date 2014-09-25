@@ -1,6 +1,13 @@
-language: "node_js"
-script: "npm run-script test-travis"
+language: node_js
+script: npm run-script test-travis
 node_js:
-  - "0.10"
-  - "0.11"
-after_script: "npm install coveralls@2.10.0 && cat ./coverage/lcov.info | coveralls"
+- '0.10'
+- '0.11'
+after_script: npm install coveralls@2.10.0 && cat ./coverage/lcov.info | coveralls
+deploy:
+  provider: npm
+  email: tituswormer@gmail.com
+  api_key:
+    secure: i3/2G6Y2kfaiz5X5cJc2+iV4y6/IGcX5ngO7p7gqTfXr41szMo9GVWNj/HcYLOGTP5Ew6w3fKrEWHTEXYkcJakumkKO428G5a+IoOcUB67HcwBcWpqlnIXsQ5jFym7C6fmVr7JdyP5nVR0IkhXfZ8bI1HkAgnC2M69w0IqpXj4w=
+  on:
+    repo: wooorm/retext-keywords
