@@ -174,13 +174,12 @@ $ npm run benchmark
 On a MacBook Air, `keywords()` runs about 3,041 op/s on a section / small article.
 
 ```
-            Finding keywords in English
- 3,041 op/s » small (10 paragraphs, 20 sentences, 300 words)
-   349 op/s » medium (100 paragraphs, 200 sentences, 3000 words)
+  3,784 op/s » Finding keywords
+    788 op/s » Finding keyphrases
 
-            Finding keyphrases in English
-   738 op/s » small (10 paragraphs, 20 sentences, 300 words)
-    47 op/s » medium (100 paragraphs, 200 sentences, 3000 words)
+             A big article (100 paragraphs)
+    401 op/s » Finding keywords
+     48 op/s » Finding keyphrases
 ```
 
 ## License
