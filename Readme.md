@@ -4,14 +4,9 @@ Keyword extraction with **[Retext](https://github.com/wooorm/retext)**.
 
 ## Installation
 
-NPM:
+npm:
 ```sh
 $ npm install retext-keywords
-```
-
-Component.js:
-```sh
-$ component install wooorm/retext-keywords
 ```
 
 ## Usage
