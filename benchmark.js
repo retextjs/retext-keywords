@@ -8,7 +8,7 @@ var Retext,
     keywords;
 
 Retext = require('retext');
-keywords = require('..');
+keywords = require('./');
 
 /**
  * Fixtures.
@@ -46,9 +46,14 @@ retext = new Retext().use(keywords);
 suite('A big section (10 paragraphs)', function () {
     var tree;
 
-    before(function(next) {
+    before(function (next) {
         retext.parse(sourceSmall, function (err, node) {
+            if (err) {
+                throw err;
+            }
+
             tree = node;
+
             next();
         });
     });
@@ -65,9 +70,14 @@ suite('A big section (10 paragraphs)', function () {
 suite('A big article (100 paragraphs)', function () {
     var tree;
 
-    before(function(next) {
+    before(function (next) {
         retext.parse(sourceMedium, function (err, node) {
+            if (err) {
+                throw err;
+            }
+
             tree = node;
+
             next();
         });
     });
