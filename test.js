@@ -8,7 +8,7 @@ var keywords,
     Retext,
     assert;
 
-keywords = require('..');
+keywords = require('./');
 Retext = require('retext');
 assert = require('assert');
 

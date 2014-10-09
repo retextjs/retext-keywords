@@ -30,14 +30,14 @@
     "retext": "^0.2.0-rc.2"
   },
   "scripts": {
-    "test": "node_modules/.bin/_mocha --reporter spec --check-leaks -u exports spec/retext-keywords.spec.js",
-    "test-travis": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha --report lcovonly -- --reporter spec --check-leaks -u exports spec/retext-keywords.spec.js",
+    "test": "node_modules/.bin/_mocha --reporter spec --check-leaks -u exports test.js",
+    "test-travis": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha --report lcovonly -- --reporter spec --check-leaks -u exports test.js",
     "lint": "npm run lint-api && npm run lint-test && npm run lint-benchmark && npm run lint-style",
     "lint-api": "node_modules/.bin/eslint index.js --env node --env browser --rule 'quotes: [2, single], no-cond-assign: false'",
-    "lint-test": "node_modules/.bin/eslint spec/retext-keywords.spec.js --env node --env mocha --rule 'quotes: [2, single]'",
-    "lint-style": "node_modules/.bin/jscs index.js spec/retext-keywords.spec.js benchmark/index.js --reporter=inline",
-    "lint-benchmark": "node_modules/.bin/eslint benchmark/index.js --env node --global suite,set,bench --rule 'quotes: [2, single]'",
-    "coverage": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -- spec/retext-keywords.spec.js",
+    "lint-test": "node_modules/.bin/eslint test.js --env node --env mocha --rule 'quotes: [2, single]'",
+    "lint-style": "node_modules/.bin/jscs index.js test.js benchmark/index.js --reporter=inline",
+    "lint-benchmark": "node_modules/.bin/eslint benchmark/index.js --env node --global suite,set,bench,before --rule 'quotes: [2, single]'",
+    "coverage": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -- test.js",
     "benchmark": "node_modules/.bin/matcha",
     "make": "npm run lint && npm run coverage"
   }
