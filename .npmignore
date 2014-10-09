@@ -1,5 +1,9 @@
-node_modules
-.DS_Store
-coverage
+.*
 *.log
-.travis.yml
+coverage/
+node_modules/
+test.js
+benchmark.js
+bower.json
+component.json
+History.md
