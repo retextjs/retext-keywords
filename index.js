@@ -135,7 +135,7 @@ function getImportantWords(node) {
 
     importantWords = {};
 
-    node.visitType(node.WORD_NODE, function (word) {
+    node.visit(node.WORD_NODE, function (word) {
         var stem;
 
         if (isImportant(word)) {
