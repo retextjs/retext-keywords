@@ -1,4 +1,13 @@
 
+n.n.n / 2014-10-15
+==================
+
+ * Update API for changes to retext-visit
+ * Update retext-porter-stemmer, retext-pos, retext-visit, jscs, retext
+ * Update .gitignore, .npmignore
+ * Move benchmark to benchmark.js
+ * Move spec to test.js
+
 0.1.0 / 2014-09-25
 ==================
 
