@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Module dependencies.
+ * Dependencies.
  */
 
 var keywords,
@@ -24,7 +24,7 @@ retext = new Retext().use(keywords);
 TextOM = retext.TextOM;
 
 /**
- * Value.
+ * Fixtures.
  *
  * First three paragraphs on term extraction from
  * Wikipedia:
