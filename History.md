@@ -1,4 +1,11 @@
 
+n.n.n / 2014-10-21
+==================
+
+ * Refactor test
+ * Refactor .jscs.json
+ * Update retext
+
 0.1.1 / 2014-10-15
 ==================
 
