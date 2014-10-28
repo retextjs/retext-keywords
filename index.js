@@ -137,9 +137,9 @@ function getImportantWords(node) {
 
             if (!has.call(importantWords, stem)) {
                 importantWords[stem] = {
-                    'nodes' : [word],
-                    'stem' : stem,
-                    'score' : 1
+                    'nodes': [word],
+                    'stem': stem,
+                    'score': 1
                 };
             } else {
                 importantWords[stem].nodes.push(word);
@@ -205,9 +205,9 @@ function findPhraseInDirection(node, direction) {
     }
 
     return {
-        'stems' : stems,
-        'words' : words,
-        'nodes' : nodes
+        'stems': stems,
+        'words': words,
+        'nodes': nodes
     };
 }
 
@@ -238,9 +238,9 @@ function findPhrase(node) {
         stems = merge(prev.stems, node.data.stem.toLowerCase(), next.stems);
 
     return {
-        'stems' : stems,
-        'value' : stems.join(' ').toLowerCase(),
-        'nodes' : merge(prev.nodes, node, next.nodes)
+        'stems': stems,
+        'value': stems.join(' ').toLowerCase(),
+        'nodes': merge(prev.nodes, node, next.nodes)
     };
 }
 
@@ -333,11 +333,11 @@ function getKeyphrases(options) {
                 }
 
                 stemmedPhrases[phrase.value] = {
-                    'score' : score,
-                    'weight' : score,
-                    'stems' : stems,
-                    'value' : phrase.value,
-                    'nodes' : [phrase.nodes]
+                    'score': score,
+                    'weight': score,
+                    'stems': stems,
+                    'value': phrase.value,
+                    'nodes': [phrase.nodes]
                 };
             }
         }

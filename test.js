@@ -115,7 +115,7 @@ describe('TextOM.Parent#keywords(options?)', function () {
             var terms;
 
             terms = tree.keywords({
-                'minimum' : 7
+                'minimum': 7
             });
 
             assert(terms[0].stem === 'terminolog');
@@ -177,7 +177,7 @@ describe('TextOM.Parent#keyphrases(options?)', function () {
             var phrases;
 
             phrases = tree.keyphrases({
-                'minimum' : 3
+                'minimum': 3
             });
 
             assert(phrases[0].value === 'terminolog extract');
