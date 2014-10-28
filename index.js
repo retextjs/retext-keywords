@@ -21,12 +21,6 @@ var has;
 has = Object.prototype.hasOwnProperty;
 
 /**
- * Define `keywords`.
- */
-
-function keywords() {}
-
-/**
  * Reverse sort: from 9 to 0.
  *
  * @param {number} a
@@ -368,12 +362,12 @@ function getKeyphrases(options) {
 }
 
 /**
- * Define `attach`.
+ * Define `keywords`.
  *
  * @param {Retext}
  */
 
-function attach(retext) {
+function keywords(retext) {
     var TextOM,
         parentPrototype,
         elementPrototype;
@@ -393,12 +387,6 @@ function attach(retext) {
     parentPrototype.keyphrases = getKeyphrases;
     elementPrototype.keyphrases = getKeyphrases;
 }
-
-/**
- * Expose `attach`.
- */
-
-keywords.attach = attach;
 
 /**
  * Expose `keywords`.

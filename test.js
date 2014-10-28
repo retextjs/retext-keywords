@@ -81,12 +81,6 @@ describe('keywords()', function () {
     });
 });
 
-describe('keywords.attach()', function () {
-    it('should be a `function`', function () {
-        assert(typeof keywords.attach === 'function');
-    });
-});
-
 describe('TextOM.Parent#keywords(options?)', function () {
     it('should be a `function`', function () {
         assert(typeof TextOM.Parent.prototype.keywords === 'function');
