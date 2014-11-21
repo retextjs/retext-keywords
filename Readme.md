@@ -1,6 +1,6 @@
 # retext-keywords [![Build Status](https://img.shields.io/travis/wooorm/retext-keywords.svg?style=flat)](https://travis-ci.org/wooorm/retext-keywords) [![Coverage Status](https://img.shields.io/coveralls/wooorm/retext-keywords.svg?style=flat)](https://coveralls.io/r/wooorm/retext-keywords?branch=master)
 
-Keyword extraction with **[Retext](https://github.com/wooorm/retext)**.
+Keyword extraction with **[retext](https://github.com/wooorm/retext)**.
 
 ## Installation
 
@@ -12,11 +12,10 @@ $ npm install retext-keywords
 ## Usage
 
 ```js
-var Retext = require('retext'),
-    keywords = require('retext-keywords'),
-    retext;
+var Retext = require('retext');
+var keywords = require('retext-keywords');
 
-retext = new Retext().use(keywords);
+var retext = new Retext().use(keywords);
 
 retext.parse(
     /* First three paragraphs on Term Extraction from Wikipedia:
@@ -87,7 +86,7 @@ retext.parse(
 
 ## API
 
-### Parent#keywords({minimum=5}?)
+### [TextOM.Parent](https://github.com/wooorm/textom#textomparent-nlcstparent)#keywords({minimum=5}?)
 
 Extract keywords, based on the number of times they (nouns) occur in text.
 
@@ -108,9 +107,9 @@ Results: An array, containing match-objects:
 - score: A value between 0 and (including) 1. the first match has a score of 1;
 - nodes: An array containing all matched word nodes.
 
-### Parent#keyphrases({minimum=5}?)
+### [TextOM.Parent](https://github.com/wooorm/textom#textomparent-nlcstparent)#keyphrases({minimum=5}?)
 
-Extract keyphrases, based on the number of times they (multiple nouns) occur in text.
+Extract keyphrases, based on the number of times they (one or more nouns) occur in text.
 
 ```js
 tree.keyphrases();
@@ -161,12 +160,6 @@ Results: An array, containing match-objects:
 - nodes: An array containing array-phrases, each containing word nodes.
 
 ## Benchmark
-
-Run the benchmark yourself:
-
-```sh
-$ npm run benchmark
-```
 
 On a MacBook Air, `keywords()` runs about 3,784 op/s on a big section / small article.
 
