@@ -24,10 +24,10 @@
   "devDependencies": {
     "eslint": "^0.9.0",
     "istanbul": "^0.3.0",
-    "jscs": "^1.7.0",
-    "matcha": "^0.5.0",
+    "jscs": "^1.0.0",
+    "matcha": "^0.6.0",
     "mocha": "^2.0.0",
-    "retext": "^0.3.0-rc.2"
+    "retext": "^0.4.0"
   },
   "scripts": {
     "test": "node_modules/.bin/_mocha --reporter spec --check-leaks -u exports test.js",
