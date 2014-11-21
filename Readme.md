@@ -1,4 +1,4 @@
-# retext-keywords [![Build Status](https://travis-ci.org/wooorm/retext-keywords.svg?branch=master)](https://travis-ci.org/wooorm/retext-keywords) [![Coverage Status](https://img.shields.io/coveralls/wooorm/retext-keywords.svg)](https://coveralls.io/r/wooorm/retext-keywords?branch=master)
+# retext-keywords [![Build Status](https://img.shields.io/travis/wooorm/retext-keywords.svg?style=flat)](https://travis-ci.org/wooorm/retext-keywords) [![Coverage Status](https://img.shields.io/coveralls/wooorm/retext-keywords.svg?style=flat)](https://coveralls.io/r/wooorm/retext-keywords?branch=master)
 
 Keyword extraction with **[Retext](https://github.com/wooorm/retext)**.
 
