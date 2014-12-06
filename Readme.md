@@ -86,7 +86,7 @@ retext.parse(
 
 ## API
 
-### [TextOM.Parent](https://github.com/wooorm/textom#textomparent-nlcstparent)#keywords({minimum=5}?)
+### [TextOM.Parent](https://github.com/wooorm/textom#textomparent-nlcstparent)#keywords(options?)
 
 Extract keywords, based on the number of times they (nouns) occur in text.
 
@@ -99,15 +99,15 @@ tree.keywords({'minimum' : Infinity});
 
 Options:
 
-- minimum: Return at least (when possible) `minimum` keywords.
+- minimum (non-negative integer `number`) — Return at least (when possible) `minimum` keywords.
 
 Results: An array, containing match-objects:
 
 - stem: The stem of the word (see [retext-porter-stemmer](https://github.com/wooorm/retext-porter-stemmer/));
-- score: A value between 0 and (including) 1. the first match has a score of 1;
-- nodes: An array containing all matched word nodes.
+- score: A value between `0` and (including) `1`. The first match has a score of 1;
+- nodes: An array containing all matched [`WordNode`](https://github.com/wooorm/textom#textomwordnode-nlcstwordnode)s.
 
-### [TextOM.Parent](https://github.com/wooorm/textom#textomparent-nlcstparent)#keyphrases({minimum=5}?)
+### [TextOM.Parent](https://github.com/wooorm/textom#textomparent-nlcstparent)#keyphrases(options?)
 
 Extract keyphrases, based on the number of times they (one or more nouns) occur in text.
 
@@ -151,13 +151,13 @@ tree.keyphrases({'minimum' : Infinity});
 
 Options:
 
-- minimum: Return at least (when possible) `minimum` phrases.
+- minimum (non-negative integer `number`) — Return at least (when possible) `minimum` phrases.
 
 Results: An array, containing match-objects:
 
 - stems: An array containing the stems of all matched word nodes inside the phrase(s);
-- score: A value between 0 and (including) 1. the first match has a score of 1;
-- nodes: An array containing array-phrases, each containing word nodes.
+- score: A value between `0` and (including) `1`. The first match has a score of 1;
+- nodes: An array containing arrays of [`WordNode`](https://github.com/wooorm/textom#textomwordnode-nlcstwordnode)s.
 
 ## Benchmark
 
