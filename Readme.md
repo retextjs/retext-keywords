@@ -165,12 +165,12 @@ On a MacBook Air, `keywords()` runs about 3,784 op/s on a big section / small ar
 
 ```
              A big section (10 paragraphs)
-  3,784 op/s » Finding keywords
-    788 op/s » Finding keyphrases
+  4,026 op/s » Finding keywords
+    625 op/s » Finding keyphrases
 
              A big article (100 paragraphs)
-    401 op/s » Finding keywords
-     48 op/s » Finding keyphrases
+    438 op/s » Finding keywords
+     59 op/s » Finding keyphrases
 ```
 
 ## License
