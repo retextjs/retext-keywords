@@ -16,6 +16,12 @@ $ npm install retext-keywords
 $ component install wooorm/retext-keywords
 ```
 
+[Bower](http://bower.io/#install-packages):
+
+```bash
+$ bower install retext-keywords
+```
+
 [Duo](http://duojs.org/#getting-started):
 
 ```javascript
