@@ -5,13 +5,14 @@ Keyword extraction with **[retext](https://github.com/wooorm/retext)**.
 ## Installation
 
 npm:
-```sh
+
+```bash
 $ npm install retext-keywords
 ```
 
 ## Usage
 
-```js
+```javascript
 var Retext = require('retext');
 var keywords = require('retext-keywords');
 
@@ -90,7 +91,7 @@ retext.parse(
 
 Extract keywords, based on the number of times they (nouns) occur in text.
 
-```js
+```javascript
 /* See above for an example, and output. */
 
 /* To *not* limit keyword-count: */
@@ -111,7 +112,7 @@ Results: An array, containing match-objects:
 
 Extract keyphrases, based on the number of times they (one or more nouns) occur in text.
 
-```js
+```javascript
 tree.keyphrases();
 /*
  * Array[6]
@@ -163,7 +164,7 @@ Results: An array, containing match-objects:
 
 On a MacBook Air, `keywords()` runs about 3,784 op/s on a big section / small article.
 
-```
+```javascript
              A big section (10 paragraphs)
   4,026 op/s » Finding keywords
     625 op/s » Finding keyphrases
