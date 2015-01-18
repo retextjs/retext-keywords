@@ -1,0 +1,23 @@
+{
+  "name": "retext-keywords",
+  "version": "0.2.0",
+  "description": "Keyword extraction with Retext",
+  "license": "MIT",
+  "keywords": [
+    "keyword",
+    "phrase",
+    "terminology",
+    "term",
+    "extraction",
+    "retext"
+  ],
+  "dependencies": {
+    "wooorm/retext-porter-stemmer": "^0.2.2",
+    "wooorm/retext-pos": "^0.2.1",
+    "wooorm/retext-visit": "^0.2.2"
+  },
+  "repository": "wooorm/retext-keywords",
+  "scripts": [
+    "index.js"
+  ]
+}
