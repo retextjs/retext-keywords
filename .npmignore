@@ -1,10 +1,12 @@
 .*
 *.log
+bower_components/
 build/
 components/
 coverage/
 node_modules/
 component.json
-test.js
+bower.json
 benchmark.js
+test.js
 History.md
