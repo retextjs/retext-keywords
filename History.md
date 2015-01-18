@@ -1,5 +1,5 @@
 
-n.n.n / 2015-01-18
+0.2.1 / 2015-01-18
 ==================
 
   * Add Bower as an installation method in `Readme.md`
