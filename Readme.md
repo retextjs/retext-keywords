@@ -9,7 +9,6 @@ Keyword extraction with **[retext](https://github.com/wooorm/retext)**.
 ```bash
 $ npm install retext-keywords
 ```
-```
 
 [Duo](http://duojs.org/#getting-started):
 
