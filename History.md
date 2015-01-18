@@ -1,4 +1,18 @@
 
+n.n.n / 2015-01-18
+==================
+
+  * Add Bower as an installation method in `Readme.md`
+  * Update `.gitignore` for bower
+  * Update `.npmignore` for bower
+  * Add `bower.json`
+  * Add Component as an instalation method in `Readme.md`
+  * Update `.npmignore` for component
+  * Update `.gitignore` for component
+  * Add `component.json`
+  * Update retext-pos
+  * Fix malformed markdown in `Readme.md`
+
 0.2.0 / 2015-01-18
 ==================
 
