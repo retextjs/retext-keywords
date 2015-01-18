@@ -1,6 +1,6 @@
 'use strict';
 
-/**
+/*
  * Dependencies.
  */
 
@@ -10,7 +10,7 @@ var Retext,
 Retext = require('retext');
 keywords = require('./');
 
-/**
+/*
  * Fixtures.
  *
  * First paragraph on term extraction from Wikipedia:
@@ -31,7 +31,7 @@ source =
 sourceSmall = Array(11).join(source);
 sourceMedium = Array(11).join(sourceSmall);
 
-/**
+/*
  * Retext.
  */
 
@@ -39,7 +39,7 @@ var retext;
 
 retext = new Retext().use(keywords);
 
-/**
+/*
  * Benchmarks.
  */
 

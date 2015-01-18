@@ -1,6 +1,6 @@
 'use strict';
 
-/**
+/*
  * Dependencies.
  */
 
@@ -12,7 +12,7 @@ keywords = require('./');
 Retext = require('retext');
 assert = require('assert');
 
-/**
+/*
  * Retext.
  */
 
@@ -23,7 +23,7 @@ retext = new Retext().use(keywords);
 
 TextOM = retext.TextOM;
 
-/**
+/*
  * Fixtures.
  *
  * First three paragraphs on term extraction from
@@ -71,7 +71,7 @@ value =
     'semantic similarity, knowledge management, human translation ' +
     'and machine translation, etc.';
 
-/**
+/*
  * Tests.
  */
 

@@ -1,6 +1,6 @@
 'use strict';
 
-/**
+/*
  * Module dependencies.
  */
 
@@ -12,7 +12,7 @@ pos = require('retext-pos');
 stemmer = require('retext-porter-stemmer');
 visit = require('retext-visit');
 
-/**
+/*
  * Constants.
  */
 
@@ -26,7 +26,6 @@ has = Object.prototype.hasOwnProperty;
  * @param {number} a
  * @param {number} b
  */
-
 function reverseSort(a, b) {
     return b - a;
 }
@@ -41,7 +40,6 @@ function reverseSort(a, b) {
  *   return.
  * @return {Array.<Object>}
  */
-
 function filterResults(results, minimum) {
     var filteredResults,
         matrix,
@@ -102,7 +100,6 @@ function filterResults(results, minimum) {
  * @param {Node} node
  * @return {boolean}
  */
-
 function isImportant(node) {
     return (
         node &&
@@ -123,7 +120,6 @@ function isImportant(node) {
  * @param {Node} node
  * @return {Array.<Object>}
  */
-
 function getImportantWords(node) {
     var importantWords;
 
@@ -159,7 +155,6 @@ function getImportantWords(node) {
  * @this {Node} node
  * @return {Array.<Object>}
  */
-
 function getKeywords(options) {
     var minimum;
 
@@ -175,7 +170,6 @@ function getKeywords(options) {
  * @param {string} direction - either "prev" or "next".
  * @return {Object}
  */
-
 function findPhraseInDirection(node, direction) {
     var nodes,
         stems,
@@ -220,7 +214,6 @@ function findPhraseInDirection(node, direction) {
  * @param {Array.<*>} next
  * @return {Array.<*>}
  */
-
 function merge(prev, current, next) {
     return prev.reverse().concat([current], next);
 }
@@ -231,7 +224,6 @@ function merge(prev, current, next) {
  * @param {Node} node
  * @return {Object}
  */
-
 function findPhrase(node) {
     var prev = findPhraseInDirection(node, 'prev'),
         next = findPhraseInDirection(node, 'next'),
@@ -252,7 +244,6 @@ function findPhrase(node) {
  * @this {Node} node
  * @return {Array.<Object>}
  */
-
 function getKeyphrases(options) {
     var stemmedPhrases,
         initialWords,
@@ -274,7 +265,7 @@ function getKeyphrases(options) {
 
     importantWords = getImportantWords(this);
 
-    /**
+    /*
      * Iterate over all grouped important words...
      */
 
@@ -283,14 +274,14 @@ function getKeyphrases(options) {
 
         index = -1;
 
-        /**
+        /*
          * Iterate over every occurence of a certain keyword...
          */
 
         while (nodes[++index]) {
             phrase = findPhrase(nodes[index]);
 
-            /**
+            /*
              * If we've detected the same stemmed
              * phrase somewhere.
              */
@@ -298,14 +289,14 @@ function getKeyphrases(options) {
             if (has.call(stemmedPhrases, phrase.value)) {
                 stemmedPhrase = stemmedPhrases[phrase.value];
 
-                /**
+                /*
                  * Add weight per phrase to the score of
                  * the phrase.
                  */
 
                 stemmedPhrase.score += stemmedPhrase.weight;
 
-                /**
+                /*
                  * If this is the first time we walk over
                  * the phrase (exact match but containing
                  * another important word), add it to the
@@ -323,7 +314,7 @@ function getKeyphrases(options) {
 
                 initialWords.push(phrase.nodes[0]);
 
-                /**
+                /*
                  * For every stem in phrase, add its
                  * score to score.
                  */
@@ -346,7 +337,7 @@ function getKeyphrases(options) {
     for (stemmedPhrase in stemmedPhrases) {
         phrase = stemmedPhrases[stemmedPhrase];
 
-        /**
+        /*
          * Modify its score to be the rounded result of
          * multiplying it with the number of occurances,
          * and dividing it by the ammount of words in the
@@ -364,9 +355,8 @@ function getKeyphrases(options) {
 /**
  * Define `keywords`.
  *
- * @param {Retext}
+ * @param {Retext} retext
  */
-
 function keywords(retext) {
     var TextOM,
         parentPrototype,
@@ -388,7 +378,7 @@ function keywords(retext) {
     elementPrototype.keyphrases = getKeyphrases;
 }
 
-/**
+/*
  * Expose `keywords`.
  */
 
