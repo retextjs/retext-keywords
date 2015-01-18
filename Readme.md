@@ -4,7 +4,7 @@ Keyword extraction with **[retext](https://github.com/wooorm/retext)**.
 
 ## Installation
 
-npm:
+[npm](https://docs.npmjs.com/cli/install):
 
 ```bash
 $ npm install retext-keywords
@@ -58,7 +58,7 @@ retext.parse(
     'and machine translation, etc.',
     function (err, tree) {
         tree.keywords();
-        /**
+        /*
          * Array[5]
          * ├─ 0: Object
          * |     ├─ stem: "terminolog"
