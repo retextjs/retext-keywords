@@ -10,6 +10,12 @@ Keyword extraction with **[retext](https://github.com/wooorm/retext)**.
 $ npm install retext-keywords
 ```
 
+[Component.js](https://github.com/componentjs/component):
+
+```bash
+$ component install wooorm/retext-keywords
+```
+
 [Duo](http://duojs.org/#getting-started):
 
 ```javascript
