@@ -1,4 +1,6 @@
 .DS_Store
 *.log
-node_modules/
+build/
+components/
 coverage/
+node_modules/
