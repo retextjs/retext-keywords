@@ -4,6 +4,11 @@
 
 <!--lint disable maximum-line-length-->
 
+1.0.0 / 2015-08-03
+==================
+
+*   Refactor for changes in retext@1.0.0 ([1993b8b](https://github.com/wooorm/retext-keywords/commit/1993b8b))
+
 0.2.1 / 2015-01-18
 ==================
 
