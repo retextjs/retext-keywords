@@ -3,5 +3,6 @@
 bower_components/
 build/
 components/
-coverage/
 node_modules/
+coverage/
+build.js

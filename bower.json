@@ -1,6 +1,6 @@
 {
   "name": "retext-keywords",
-  "main": "index.js",
+  "main": "retext-keywords.js",
   "description": "Keyword extraction with Retext",
   "license": "MIT",
   "keywords": [
@@ -11,11 +11,6 @@
     "extraction",
     "retext"
   ],
-  "dependencies": {
-    "retext-porter-stemmer": "^0.2.2",
-    "retext-pos": "^0.2.1",
-    "retext-visit": "^0.2.2"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/wooorm/retext-keywords.git"

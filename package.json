@@ -12,36 +12,48 @@
     "retext"
   ],
   "dependencies": {
-    "retext-porter-stemmer": "^0.2.2",
-    "retext-pos": "^0.2.1",
-    "retext-visit": "^0.2.2"
+    "nlcst-to-string": "^0.1.5",
+    "retext-pos": "^1.0.0",
+    "stemmer": "^0.1.4",
+    "unist-util-visit": "^1.0.0"
   },
+  "files": [
+    "index.js"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/wooorm/retext-keywords.git"
   },
   "author": "Titus Wormer <tituswormer@gmail.com>",
   "devDependencies": {
-    "eslint": "^0.12.0",
+    "browserify": "^11.0.1",
+    "chalk": "^1.0.0",
+    "eslint": "^1.0.0",
+    "esmangle": "^1.0.1",
     "istanbul": "^0.3.0",
-    "jscs": "^1.0.0",
-    "jscs-jsdoc": "^0.4.0",
-    "matcha": "^0.6.0",
+    "jscs": "^2.0.0",
+    "jscs-jsdoc": "^1.0.0",
+    "mdast": "^0.28.0",
+    "mdast-comment-config": "^0.1.2",
+    "mdast-github": "^0.3.2",
+    "mdast-lint": "^0.4.2",
+    "mdast-slug": "^0.1.1",
+    "mdast-validate-links": "^0.3.1",
     "mocha": "^2.0.0",
-    "retext": "^0.5.0"
+    "retext": "^1.0.0-rc.2"
   },
   "scripts": {
-    "test-api": "_mocha --check-leaks test.js",
-    "test-coveralls": "istanbul cover _mocha --report lcovonly -- --check-leaks test.js",
-    "test-coverage": "istanbul cover _mocha -- --check-leaks test.js",
-    "test-travis": "npm run test-coveralls",
+    "test-api": "mocha --check-leaks test.js",
+    "test-coverage": "istanbul cover _mocha -- test.js",
+    "test-travis": "npm run test-coverage",
     "test": "npm run test-api",
-    "lint-api": "eslint index.js",
-    "lint-benchmark": "eslint --global bench,before,suite,set benchmark.js",
-    "lint-test": "eslint --env mocha test.js",
-    "lint-style": "jscs --reporter inline index.js benchmark.js test.js",
-    "lint": "npm run lint-api && npm run lint-benchmark && npm run lint-test && npm run lint-style",
+    "lint-api": "eslint .",
+    "lint-style": "jscs --reporter inline .",
+    "lint": "npm run lint-api && npm run lint-style",
     "make": "npm run lint && npm run test-coverage",
-    "benchmark": "matcha benchmark.js"
+    "build-bundle": "browserify index.js --ignore-missing --no-builtins --standalone retextPOS > retext-keywords.js",
+    "postbuild-bundle": "esmangle retext-keywords.js > retext-keywords.min.js",
+    "build-md": "mdast . --quiet",
+    "build": "npm run build-bundle && npm run build-md"
   }
 }

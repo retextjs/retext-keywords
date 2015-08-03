@@ -1,7 +1,8 @@
 {
+  "extends": "eslint:recommended",
   "env": {
-    "node": true,
-    "browser": true
+    "browser": true,
+    "node": true
   },
   "rules": {
     "quotes": [2, "single"]

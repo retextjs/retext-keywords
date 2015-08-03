@@ -1,65 +1,137 @@
+/**
+ * @author Titus Wormer
+ * @copyright 2014-2015 Titus Wormer
+ * @license MIT
+ * @module retext:keywords
+ * @fileoverview Keyword extraction with Retext.
+ */
+
 'use strict';
 
 /*
- * Module dependencies.
+ * Dependencies.
  */
 
-var pos,
-    stemmer,
-    visit;
+var stemmer = require('stemmer');
+var visit = require('unist-util-visit');
+var nlcstToString = require('nlcst-to-string');
+var pos = require('retext-pos');
 
-pos = require('retext-pos');
-stemmer = require('retext-porter-stemmer');
-visit = require('retext-visit');
-
-/*
- * Constants.
+/**
+ * Get the stem of a node.
+ *
+ * @param {Node} node - Node to stem.
+ * @return {string} - Stemmed node.
  */
+function stemNode(node) {
+    return stemmer(nlcstToString(node)).toLowerCase();
+}
 
-var has;
-
-has = Object.prototype.hasOwnProperty;
+/**
+ * Check whether `value` is upper-case.
+ *
+ * @param {string} value - Value to check.
+ * @return {boolean} - Whether `value` is upper-case.
+ */
+function isUpperCase(value) {
+    return value === String(value).toUpperCase();
+}
 
 /**
  * Reverse sort: from 9 to 0.
  *
- * @param {number} a
- * @param {number} b
+ * @param {number} a - First.
+ * @param {number} b - Second.
+ * @return {number} - Difference.
  */
-function reverseSort(a, b) {
+function reverse(a, b) {
     return b - a;
+}
+
+/**
+ * Check whether or not a `node` is important.
+ *
+ * @param {Node} node - Node to check.
+ * @return {boolean} - Whether `node` is important.
+ */
+function isImportant(node) {
+    return (
+        node &&
+        node.data &&
+        node.data.partOfSpeech &&
+        (
+            node.data.partOfSpeech.indexOf('N') === 0 ||
+            (
+                node.data.partOfSpeech === 'JJ' &&
+                isUpperCase(nlcstToString(node).charAt(0))
+            )
+        )
+    );
+}
+
+/**
+ * Get most important words in `node`.
+ *
+ * @param {Node} node - Parent to search in.
+ * @return {Array.<Object>}
+ */
+function getImportantWords(node) {
+    var words = {};
+
+    visit(node, 'WordNode', function (word, index, parent) {
+        var match;
+        var stem;
+
+        if (isImportant(word)) {
+            stem = stemNode(word);
+            match = {
+                'node': word,
+                'index': index,
+                'parent': parent
+            };
+
+            if (!words[stem]) {
+                words[stem] = {
+                    'matches': [match],
+                    'stem': stem,
+                    'score': 1
+                };
+            } else {
+                words[stem].matches.push(match);
+                words[stem].score++;
+            }
+        }
+    });
+
+    return words;
 }
 
 /**
  * Get the top results from an occurance map.
  *
- * @param {Object.<string, Object>} results - Dictionary of
- *   stems mapping to objects containing `nodes`, `stem`,
- *   and `score` properties.
- * @param {number} minimum - Minimum number of results to
- *   return.
+ * @param {Object.<string, Object>} results - Map of stems
+ *   mapping to objects containing `nodes`, `stem`, and
+ *   `score` properties.
+ * @param {number} maximum - Try to get at least `maximum`
+ *   results.
  * @return {Array.<Object>}
  */
-function filterResults(results, minimum) {
-    var filteredResults,
-        matrix,
-        indices,
-        column,
-        key,
-        score,
-        interpolatedScore,
-        index,
-        otherIndex,
-        maxScore;
-
-    filteredResults = [];
-    indices = [];
-    matrix = {};
+function filterResults(results, maximum) {
+    var filteredResults = [];
+    var indices = [];
+    var matrix = {};
+    var column;
+    var key;
+    var score;
+    var interpolated;
+    var index;
+    var otherIndex;
+    var maxScore;
 
     for (key in results) {
         score = results[key].score;
 
-        if (!has.call(matrix, score)) {
+        if (!matrix[score]) {
             matrix[score] = [];
             indices.push(score);
         }
@@ -67,7 +139,7 @@ function filterResults(results, minimum) {
         matrix[score].push(results[key]);
     }
 
-    indices.sort(reverseSort);
+    indices.sort(reverse);
 
     maxScore = indices[0];
 
@@ -77,16 +149,16 @@ function filterResults(results, minimum) {
         score = indices[index];
         column = matrix[score];
 
-        interpolatedScore = score / maxScore;
+        interpolated = score / maxScore;
         otherIndex = -1;
 
         while (column[++otherIndex]) {
-            column[otherIndex].score = interpolatedScore;
+            column[otherIndex].score = interpolated;
         }
 
         filteredResults = filteredResults.concat(column);
 
-        if (filteredResults.length >= minimum) {
+        if (filteredResults.length >= maximum) {
             break;
         }
     }
@@ -95,107 +167,36 @@ function filterResults(results, minimum) {
 }
 
 /**
- * Get whether or not a `node` is important.
- *
- * @param {Node} node
- * @return {boolean}
- */
-function isImportant(node) {
-    return (
-        node &&
-        node.type === 'WordNode' &&
-        (
-            node.data.partOfSpeech.indexOf('N') === 0 ||
-            (
-                node.data.partOfSpeech === 'JJ' &&
-                node.toString().charAt(0).match(/[A-Z]/)
-            )
-        )
-    );
-}
-
-/**
- * Get most important words in `node`.
- *
- * @param {Node} node
- * @return {Array.<Object>}
- */
-function getImportantWords(node) {
-    var importantWords;
-
-    importantWords = {};
-
-    node.visit(node.WORD_NODE, function (word) {
-        var stem;
-
-        if (isImportant(word)) {
-            stem = word.data.stem.toLowerCase();
-
-            if (!has.call(importantWords, stem)) {
-                importantWords[stem] = {
-                    'nodes': [word],
-                    'stem': stem,
-                    'score': 1
-                };
-            } else {
-                importantWords[stem].nodes.push(word);
-                importantWords[stem].score++;
-            }
-        }
-    });
-
-    return importantWords;
-}
-
-/**
- * Get the top important words in `self`.
- *
- * @param {Object?} options
- * @param {number?} options.minimum
- * @this {Node} node
- * @return {Array.<Object>}
- */
-function getKeywords(options) {
-    var minimum;
-
-    minimum = options && has.call(options, 'minimum') ? options.minimum : 5;
-
-    return filterResults(getImportantWords(this), minimum);
-}
-
-/**
  * Get following or preceding important words or white space.
  *
- * @param {Node} node
- * @param {string} direction - either "prev" or "next".
+ * @param {Node} node - Node to start search at.
+ * @param {number} index - Position of `node` in `parent`.
+ * @param {Node} parent - Parent of `node`.
+ * @param {number} offset - Offset to the next node. `-1`
+ *   when iterating backwards, `1` when iterating forwards.
  * @return {Object}
  */
-function findPhraseInDirection(node, direction) {
-    var nodes,
-        stems,
-        words,
-        queue;
+function findPhraseInDirection(node, index, parent, offset) {
+    var children = parent.children;
+    var nodes = [];
+    var stems = [];
+    var words = [];
+    var queue = [];
+    var child;
 
-    nodes = [];
-    stems = [];
-    words = [];
-    queue = [];
+    while (children[index += offset]) {
+        child = children[index];
 
-    node = node[direction];
-
-    while (node) {
-        if (node.type === node.WHITE_SPACE_NODE) {
-            queue.push(node);
-        } else if (isImportant(node)) {
-            nodes = nodes.concat(queue, [node]);
-            words.push(node);
-            stems.push(node.data.stem.toLowerCase());
+        if (child.type === 'WhiteSpaceNode') {
+            queue.push(child);
+        } else if (isImportant(child)) {
+            nodes = nodes.concat(queue, [child]);
+            words.push(child);
+            stems.push(stemNode(child));
             queue = [];
         } else {
             break;
         }
-
-        node = node[direction];
     }
 
     return {
@@ -209,29 +210,30 @@ function findPhraseInDirection(node, direction) {
  * Merge a previous array, with a current value, and
  * a following array.
  *
- * @param {Array.<*>} prev
- * @param {*} current
- * @param {Array.<*>} next
+ * @param {Array.<*>} prev - Reversed array before `current`.
+ * @param {*} current - Current thing.
+ * @param {Array.<*>} next - Things after `current`.
  * @return {Array.<*>}
  */
 function merge(prev, current, next) {
-    return prev.reverse().concat([current], next);
+    return prev.concat().reverse().concat([current], next);
 }
 
 /**
  * Find the phrase surrounding a node.
  *
- * @param {Node} node
+ * @param {Object} match - Single match.
  * @return {Object}
  */
-function findPhrase(node) {
-    var prev = findPhraseInDirection(node, 'prev'),
-        next = findPhraseInDirection(node, 'next'),
-        stems = merge(prev.stems, node.data.stem.toLowerCase(), next.stems);
+function findPhrase(match) {
+    var node = match.node;
+    var prev = findPhraseInDirection(node, match.index, match.parent, -1);
+    var next = findPhraseInDirection(node, match.index, match.parent, 1);
+    var stems = merge(prev.stems, stemNode(node), next.stems);
 
     return {
         'stems': stems,
-        'value': stems.join(' ').toLowerCase(),
+        'value': stems.join(' '),
         'nodes': merge(prev.nodes, node, next.nodes)
     };
 }
@@ -239,56 +241,57 @@ function findPhrase(node) {
 /**
  * Get the top important phrases in `self`.
  *
- * @param {Object?} options
- * @param {number?} options.minimum
- * @this {Node} node
+ * @param {Object.<string, Object>} results - Map of stems
+ *   mapping to objects containing `nodes`, `stem`, and
+ *   `score` properties.
+ * @param {number} maximum - Try to get at least `maximum`
+ *   results.
  * @return {Array.<Object>}
  */
-function getKeyphrases(options) {
-    var stemmedPhrases,
-        initialWords,
-        stemmedPhrase,
-        index,
-        otherIndex,
-        importantWords,
-        keyword,
-        nodes,
-        phrase,
-        stems,
-        minimum,
-        score;
-
-    stemmedPhrases = {};
-    initialWords = [];
-
-    minimum = options && has.call(options, 'minimum') ? options.minimum : 5;
-
-    importantWords = getImportantWords(this);
+function getKeyphrases(results, maximum) {
+    var stemmedPhrases = {};
+    var initialWords = [];
+    var stemmedPhrase;
+    var index;
+    var length;
+    var otherIndex;
+    var keyword;
+    var matches;
+    var phrase;
+    var stems;
+    var score;
+    var first;
+    var match;
 
     /*
      * Iterate over all grouped important words...
      */
 
-    for (keyword in importantWords) {
-        nodes = importantWords[keyword].nodes;
-
+    for (keyword in results) {
+        matches = results[keyword].matches;
+        length = matches.length;
         index = -1;
 
         /*
          * Iterate over every occurence of a certain keyword...
          */
 
-        while (nodes[++index]) {
-            phrase = findPhrase(nodes[index]);
+        while (++index < length) {
+            phrase = findPhrase(matches[index]);
+            stemmedPhrase = stemmedPhrases[phrase.value];
+            first = phrase.nodes[0];
+
+            match = {
+                'nodes': phrase.nodes,
+                'parent': matches[index].parent
+            };
 
             /*
              * If we've detected the same stemmed
              * phrase somewhere.
              */
 
-            if (has.call(stemmedPhrases, phrase.value)) {
-                stemmedPhrase = stemmedPhrases[phrase.value];
-
+            if (stemmedPhrase) {
                 /*
                  * Add weight per phrase to the score of
                  * the phrase.
@@ -303,16 +306,16 @@ function getKeyphrases(options) {
                  * list of matching phrases.
                  */
 
-                if (initialWords.indexOf(phrase.nodes[0]) === -1) {
-                    initialWords.push(phrase.nodes[0]);
-                    stemmedPhrase.nodes.push(phrase.nodes);
+                if (initialWords.indexOf(first) === -1) {
+                    initialWords.push(first);
+                    stemmedPhrase.matches.push(match);
                 }
             } else {
                 otherIndex = -1;
                 score = -1;
                 stems = phrase.stems;
 
-                initialWords.push(phrase.nodes[0]);
+                initialWords.push(first);
 
                 /*
                  * For every stem in phrase, add its
@@ -320,7 +323,7 @@ function getKeyphrases(options) {
                  */
 
                 while (stems[++otherIndex]) {
-                    score += importantWords[stems[otherIndex]].score;
+                    score += results[stems[otherIndex]].score;
                 }
 
                 stemmedPhrases[phrase.value] = {
@@ -328,7 +331,7 @@ function getKeyphrases(options) {
                     'weight': score,
                     'stems': stems,
                     'value': phrase.value,
-                    'nodes': [phrase.nodes]
+                    'matches': [match]
                 };
             }
         }
@@ -345,41 +348,71 @@ function getKeyphrases(options) {
          */
 
         phrase.score = Math.round(
-            phrase.score * phrase.nodes.length / phrase.stems.length
+            phrase.score * phrase.matches.length / phrase.stems.length
         );
     }
 
-    return filterResults(stemmedPhrases, minimum);
+    return filterResults(stemmedPhrases, maximum);
 }
 
 /**
- * Define `keywords`.
+ * Clone the given map of words.
  *
- * @param {Retext} retext
+ * This is a two level-deep clone.
+ *
+ * @param {Object} words - Important words.
+ * @return {Object} - Cloned words.
  */
-function keywords(retext) {
-    var TextOM,
-        parentPrototype,
-        elementPrototype;
+function cloneMatches(words) {
+    var result = {};
+    var key;
+    var match;
 
-    TextOM = retext.TextOM;
-    parentPrototype = TextOM.Parent.prototype;
-    elementPrototype = TextOM.Element.prototype;
+    for (key in words) {
+        match = words[key];
+        result[key] = {
+            'matches': match.matches,
+            'stem': match.stem,
+            'score': match.score
+        }
+    }
 
-    retext
-        .use(stemmer)
-        .use(pos)
-        .use(visit);
+    return result;
+}
 
-    parentPrototype.keywords = getKeywords;
-    elementPrototype.keywords = getKeywords;
+/**
+ * Attach.
+ *
+ * @param {Retext} retext - Instance.
+ * @param {Object?} [options] - Configuration.
+ * @param {number?} [options.maximum] - Try to get at
+ *   least `maximum` results.
+ * @return {Function} - `transformer`.
+ */
+function attacher(retext, options) {
+    var maximum = (options || {}).maximum || 5;
 
-    parentPrototype.keyphrases = getKeyphrases;
-    elementPrototype.keyphrases = getKeyphrases;
+    retext.use(pos);
+
+    /**
+     * Attach keywords in `cst` to `file`.
+     *
+     * @param {NLCSTNode} cst - Node.
+     * @param {VFile} file - Virtual file.
+     */
+    function transformer(cst, file) {
+        var space = file.namespace('retext');
+        var important = getImportantWords(cst);
+
+        space.keywords = filterResults(cloneMatches(important), maximum);
+        space.keyphrases = getKeyphrases(important, maximum);
+    }
+
+    return transformer;
 }
 
 /*
- * Expose `keywords`.
+ * Expose.
  */
 
-module.exports = keywords;
+module.exports = attacher;

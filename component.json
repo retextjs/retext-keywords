@@ -12,9 +12,10 @@
     "retext"
   ],
   "dependencies": {
-    "wooorm/retext-porter-stemmer": "^0.2.2",
-    "wooorm/retext-pos": "^0.2.1",
-    "wooorm/retext-visit": "^0.2.2"
+    "wooorm/retext-pos": "^1.0.0",
+    "wooorm/stemmer": "~0.1.4",
+    "wooorm/unist-util-visit": "^1.0.0",
+    "wooorm/nlcst-to-string": "~0.1.5"
   },
   "repository": "wooorm/retext-keywords",
   "scripts": [

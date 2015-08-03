@@ -1,0 +1,6 @@
+build/
+components/
+coverage/
+build.js
+retext-keywords.js
+retext-keywords.min.js

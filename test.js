@@ -1,41 +1,29 @@
 'use strict';
 
+/* eslint-env mocha */
+
 /*
  * Dependencies.
  */
 
-var keywords,
-    Retext,
-    assert;
-
-keywords = require('./');
-Retext = require('retext');
-assert = require('assert');
+var assert = require('assert');
+var retext = require('retext');
+var keywords = require('./');
 
 /*
- * Retext.
+ * Methods.
  */
 
-var retext,
-    TextOM;
-
-retext = new Retext().use(keywords);
-
-TextOM = retext.TextOM;
+var equal = assert.strictEqual;
 
 /*
- * Fixtures.
+ * Fixture.
  *
- * First three paragraphs on term extraction from
- * Wikipedia:
- *
- *   http://en.wikipedia.org/wiki/Terminology_extraction
+ * First three paragraphs on Term Extraction from Wikipedia:
+ * http://en.wikipedia.org/wiki/Terminology_extraction
  */
 
-var value;
-
-value =
-    'Terminology mining, term extraction, term recognition, or ' +
+var fixture = 'Terminology mining, term extraction, term recognition, or ' +
     'glossary extraction, is a subtask of information extraction. ' +
     'The goal of terminology extraction is to automatically extract ' +
     'relevant terms from a given corpus.' +
@@ -71,126 +59,94 @@ value =
     'semantic similarity, knowledge management, human translation ' +
     'and machine translation, etc.';
 
+var keyScores = [1, 1, 0.71, 0.57, 0.57];
+var phraseScores = [1, 0.55, 0.53, 0.24, 0.18];
+
 /*
  * Tests.
  */
 
-describe('keywords()', function () {
-    it('should be a `function`', function () {
-        assert(typeof keywords === 'function');
-    });
-});
-
-describe('TextOM.Parent#keywords(options?)', function () {
-    it('should be a `function`', function () {
-        assert(typeof TextOM.Parent.prototype.keywords === 'function');
-    });
-
-    it('should work', function (done) {
-        retext.parse(value, function (err, tree) {
-            var terms;
-
-            terms = tree.keywords();
-
-            assert(terms[0].stem === 'terminolog');
-            assert(terms[1].stem === 'term');
-            assert(terms[2].stem === 'extract');
-            assert(terms[3].stem === 'web');
-            assert(terms[4].stem === 'domain');
-
-            assert(terms[0].nodes.length === 7);
-            assert(terms[1].nodes.length === 7);
-            assert(terms[2].nodes.length === 7);
-            assert(terms[3].nodes.length === 4);
-            assert(terms[4].nodes.length === 4);
-
-            assert(terms.length >= 5);
-
+describe('pos()', function () {
+    retext().use(keywords).process(fixture, function (err, file) {
+        it('should not fail', function (done) {
             done(err);
         });
-    });
 
-    it('should accept a `minimum` option', function (done) {
-        retext.parse(value, function (err, tree) {
-            var terms;
+        var namespace = file.namespace('retext');
 
-            terms = tree.keywords({
-                'minimum': 7
+        it('should work', function () {
+            assert('keywords' in namespace);
+            assert('keyphrases' in namespace);
+
+            equal(namespace.keywords.length, 5);
+            equal(namespace.keyphrases.length, 5);
+        });
+
+        it('should have scores', function () {
+            namespace.keywords.forEach(function (keyword, n) {
+                equal(Math.round(keyword.score * 1e2) / 1e2, keyScores[n]);
             });
 
-            assert(terms[0].stem === 'terminolog');
-            assert(terms[1].stem === 'term');
-            assert(terms[2].stem === 'extract');
-            assert(terms[3].stem === 'web');
-            assert(terms[4].stem === 'domain');
-            assert(terms[5].stem === 'inform');
-            assert(terms[6].stem === 'commun');
-            assert(terms[7].stem === 'knowledg');
-
-            assert(terms[0].nodes.length === 7);
-            assert(terms[1].nodes.length === 7);
-            assert(terms[2].nodes.length === 7);
-            assert(terms[3].nodes.length === 4);
-            assert(terms[4].nodes.length === 4);
-            assert(terms[5].nodes.length === 3);
-            assert(terms[6].nodes.length === 3);
-            assert(terms[7].nodes.length === 3);
-
-            assert(terms.length >= 7);
-
-            done(err);
+            namespace.keyphrases.forEach(function (phrase, n) {
+                equal(Math.round(phrase.score * 1e2) / 1e2, phraseScores[n]);
+            });
         });
-    });
-});
 
-describe('TextOM.Parent#keyphrases(options?)', function () {
-    it('should be a `function`', function () {
-        assert(typeof TextOM.Parent.prototype.keywords === 'function');
-    });
-
-    it('should work', function (done) {
-        retext.parse(value, function (err, tree) {
-            var phrases;
-
-            phrases = tree.keyphrases();
-
-            assert(phrases[0].value === 'terminolog extract');
-            assert(phrases[1].value === 'term');
-            assert(phrases[2].value === 'term extract');
-            assert(phrases[3].value === 'knowledg domain');
-            assert(phrases[4].value === 'commun');
-
-            assert(phrases[0].nodes.length === 3);
-            assert(phrases[1].nodes.length === 3);
-            assert(phrases[2].nodes.length === 2);
-            assert(phrases[3].nodes.length === 2);
-            assert(phrases[4].nodes.length === 3);
-
-            assert(phrases.length >= 5);
-
-            done(err);
-        });
-    });
-
-    it('should accept a `minimum` option', function (done) {
-        retext.parse(value, function (err, tree) {
-            var phrases;
-
-            phrases = tree.keyphrases({
-                'minimum': 3
+        it('should have stems', function () {
+            namespace.keywords.forEach(function (keyword) {
+                assert('stem' in keyword);
             });
 
-            assert(phrases[0].value === 'terminolog extract');
-            assert(phrases[1].value === 'term');
-            assert(phrases[2].value === 'term extract');
-
-            assert(phrases[0].nodes.length === 3);
-            assert(phrases[1].nodes.length === 3);
-            assert(phrases[2].nodes.length === 2);
-
-            assert(phrases.length >= 3);
-
-            done(err);
+            namespace.keyphrases.forEach(function (phrase) {
+                assert('stems' in phrase);
+            });
         });
+
+        it('should have matches', function () {
+            namespace.keywords.forEach(function (keyword) {
+                assert('matches' in keyword);
+            });
+
+            namespace.keyphrases.forEach(function (phrase) {
+                assert('matches' in phrase);
+            });
+        });
+
+        describe('keywords[n].matches[n]', function () {
+            it('should have node, index, and parent', function () {
+                namespace.keywords.forEach(function (keyword) {
+                    keyword.matches.forEach(function (match) {
+                        assert('node' in match);
+                        assert('parent' in match);
+                        assert('index' in match);
+                    });
+                });
+            });
+        })
+
+        describe('keyphrases', function () {
+            it('should have a weight', function () {
+                namespace.keyphrases.forEach(function (phrase) {
+                    assert('weight' in phrase);
+                });
+            });
+
+            it('should have a value', function () {
+                namespace.keyphrases.forEach(function (phrase) {
+                    assert('value' in phrase);
+                });
+            });
+        })
+
+        describe('keyphrases[n].matches[n]', function () {
+            it('should have nodes and parent', function () {
+                namespace.keyphrases.forEach(function (phrase) {
+                    phrase.matches.forEach(function (match) {
+                        assert('nodes' in match);
+                        assert('parent' in match);
+                    });
+                });
+            });
+        })
     });
 });
