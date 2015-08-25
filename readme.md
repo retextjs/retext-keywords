@@ -110,8 +110,7 @@ Extract keywords and key-phrases from the document.
 
 *   `options` (`Object`, optional):
 
-    *   `words` (`number`, default: `5`) — Try to detect `words` words;
-    *   `phrases` (`number`, default: `5`) — Try to detect `phrases` phrases.
+    *   `maximum` (default: 5) — Try to detect `words` and `phrases` words;
 
     Note that actual counts may differ. For example, when two words
     have the same score, both will be returned. Or when too few words
