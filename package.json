@@ -12,7 +12,7 @@
     "retext"
   ],
   "dependencies": {
-    "nlcst-to-string": "^0.1.5",
+    "nlcst-to-string": "^1.0.0",
     "retext-pos": "^1.0.0",
     "stemmer": "^0.1.4",
     "unist-util-visit": "^1.0.0"
@@ -33,12 +33,12 @@
     "istanbul": "^0.3.0",
     "jscs": "^2.0.0",
     "jscs-jsdoc": "^1.0.0",
-    "mdast": "^0.28.0",
-    "mdast-comment-config": "^0.1.2",
-    "mdast-github": "^0.3.2",
-    "mdast-lint": "^0.4.2",
-    "mdast-slug": "^0.1.1",
-    "mdast-validate-links": "^0.3.1",
+    "mdast": "^1.0.0",
+    "mdast-comment-config": "^1.0.0",
+    "mdast-github": "^1.0.0",
+    "mdast-lint": "^1.0.0",
+    "mdast-slug": "^1.0.0",
+    "mdast-validate-links": "^1.0.0",
     "mocha": "^2.0.0",
     "retext": "^1.0.0-rc.2"
   },

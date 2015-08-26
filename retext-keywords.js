@@ -418,28 +418,39 @@ function attacher(retext, options) {
 
 module.exports = attacher;
 
-},{"nlcst-to-string":2,"retext-pos":3,"stemmer":10,"unist-util-visit":11}],2:[function(require,module,exports){
+},{"nlcst-to-string":2,"retext-pos":3,"stemmer":8,"unist-util-visit":9}],2:[function(require,module,exports){
+/**
+ * @author Titus Wormer
+ * @copyright 2014-2015 Titus Wormer
+ * @license MIT
+ * @module nlcst:to-string
+ * @fileoverview Transform an NLCST node into a string.
+ */
+
 'use strict';
+
+/* eslint-env commonjs */
 
 /**
  * Stringify an NLCST node.
  *
- * @param {NLCSTNode} nlcst
- * @return {string}
+ * @param {NLCSTNode|Array.<NLCSTNode>} node - Node to to
+ *   stringify.
+ * @return {string} - Stringified `node`.
  */
-function nlcstToString(nlcst) {
-    var values,
-        length,
-        children;
+function nlcstToString(node) {
+    var values;
+    var length;
+    var children;
 
-    if (typeof nlcst.value === 'string') {
-        return nlcst.value;
+    if (typeof node.value === 'string') {
+        return node.value;
     }
 
-    children = nlcst.children;
+    children = 'length' in node ? node : node.children;
     length = children.length;
 
-    /**
+    /*
      * Shortcut: This is pretty common, and a small performance win.
      */
 
@@ -457,7 +468,7 @@ function nlcstToString(nlcst) {
 }
 
 /*
- * Expose `nlcstToString`.
+ * Expose.
  */
 
 module.exports = nlcstToString;
@@ -614,9 +625,7 @@ function attacher() {
 
 module.exports = attacher;
 
-},{"nlcst-to-string":4,"pos":6,"pos-js":undefined,"unist-util-visit":9}],4:[function(require,module,exports){
-arguments[4][2][0].apply(exports,arguments)
-},{"dup":2}],5:[function(require,module,exports){
+},{"nlcst-to-string":2,"pos":5,"pos-js":undefined,"unist-util-visit":9}],4:[function(require,module,exports){
 /*!
  * jsPOS
  *
@@ -753,11 +762,11 @@ POSTagger.prototype.extendLexicon = function(lexicon) {
 
 //print(new POSTagger().tag(["i", "went", "to", "the", "store", "to", "buy", "5.2", "gallons", "of", "milk"]));
 
-},{"./lexicon":8}],6:[function(require,module,exports){
+},{"./lexicon":7}],5:[function(require,module,exports){
 exports.Tagger = require('./POSTagger');
 exports.Lexer = require('./lexer');
 
-},{"./POSTagger":5,"./lexer":7}],7:[function(require,module,exports){
+},{"./POSTagger":4,"./lexer":6}],6:[function(require,module,exports){
 /*!
  * jsPOS
  *
@@ -847,7 +856,7 @@ Lexer.prototype.lex = function(string){
 //var lexer = new Lexer();
 //print(lexer.lex("I made $5.60 today in 1 hour of work.  The E.M.T.'s were on time, but only barely.").toString());
 
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /*
  * Javascript version of Eric Brill's English lexicon.
  */ 
@@ -298680,122 +298689,7 @@ module.exports = {
     ]
 };
 
-},{}],9:[function(require,module,exports){
-/**
- * @author Titus Wormer
- * @copyright 2015 Titus Wormer. All rights reserved.
- * @module unist:util:visit
- * @fileoverview Utility to recursively walk over unist nodes.
- */
-
-'use strict';
-
-/**
- * Walk forwards.
- *
- * @param {Array.<*>} values - Things to iterate over,
- *   forwards.
- * @param {function(*, number): boolean} callback - Function
- *   to invoke.
- * @return {boolean} - False if iteration stopped.
- */
-function forwards(values, callback) {
-    var index = -1;
-    var length = values.length;
-
-    while (++index < length) {
-        if (callback(values[index], index) === false) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-/**
- * Walk backwards.
- *
- * @param {Array.<*>} values - Things to iterate over,
- *   backwards.
- * @param {function(*, number): boolean} callback - Function
- *   to invoke.
- * @return {boolean} - False if iteration stopped.
- */
-function backwards(values, callback) {
-    var index = values.length;
-    var length = -1;
-
-    while (--index > length) {
-        if (callback(values[index], index) === false) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-/**
- * Visit.
- *
- * @param {Node} tree - Root node
- * @param {string} [type] - Node type.
- * @param {function(node): boolean?} callback - Invoked
- *   with each found node.  Can return `false` to stop.
- * @param {boolean} [reverse] - By default, `visit` will
- *   walk forwards, when `reverse` is `true`, `visit`
- *   walks backwards.
- */
-function visit(tree, type, callback, reverse) {
-    var iterate;
-    var one;
-    var all;
-
-    if (typeof type === 'function') {
-        reverse = callback;
-        callback = type;
-        type = null;
-    }
-
-    iterate = reverse ? backwards : forwards;
-
-    /**
-     * Visit `children` in `parent`.
-     */
-    all = function (children, parent) {
-        return iterate(children, function (child, index) {
-            return child && one(child, index, parent);
-        });
-    };
-
-    /**
-     * Visit a single node.
-     */
-    one = function (node, index, parent) {
-        var result;
-
-        index = index || (parent ? 0 : null);
-
-        if (!type || node.type === type) {
-            result = callback(node, index, parent || null);
-        }
-
-        if (node.children && result !== false) {
-            return all(node.children, node);
-        }
-
-        return result;
-    };
-
-    one(tree);
-}
-
-/*
- * Expose.
- */
-
-module.exports = visit;
-
-},{}],10:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 /*
@@ -299121,7 +299015,120 @@ function stemmer(value) {
 
 module.exports = stemmer;
 
-},{}],11:[function(require,module,exports){
-arguments[4][9][0].apply(exports,arguments)
-},{"dup":9}]},{},[1])(1)
+},{}],9:[function(require,module,exports){
+/**
+ * @author Titus Wormer
+ * @copyright 2015 Titus Wormer. All rights reserved.
+ * @module unist:util:visit
+ * @fileoverview Utility to recursively walk over unist nodes.
+ */
+
+'use strict';
+
+/**
+ * Walk forwards.
+ *
+ * @param {Array.<*>} values - Things to iterate over,
+ *   forwards.
+ * @param {function(*, number): boolean} callback - Function
+ *   to invoke.
+ * @return {boolean} - False if iteration stopped.
+ */
+function forwards(values, callback) {
+    var index = -1;
+    var length = values.length;
+
+    while (++index < length) {
+        if (callback(values[index], index) === false) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * Walk backwards.
+ *
+ * @param {Array.<*>} values - Things to iterate over,
+ *   backwards.
+ * @param {function(*, number): boolean} callback - Function
+ *   to invoke.
+ * @return {boolean} - False if iteration stopped.
+ */
+function backwards(values, callback) {
+    var index = values.length;
+    var length = -1;
+
+    while (--index > length) {
+        if (callback(values[index], index) === false) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * Visit.
+ *
+ * @param {Node} tree - Root node
+ * @param {string} [type] - Node type.
+ * @param {function(node): boolean?} callback - Invoked
+ *   with each found node.  Can return `false` to stop.
+ * @param {boolean} [reverse] - By default, `visit` will
+ *   walk forwards, when `reverse` is `true`, `visit`
+ *   walks backwards.
+ */
+function visit(tree, type, callback, reverse) {
+    var iterate;
+    var one;
+    var all;
+
+    if (typeof type === 'function') {
+        reverse = callback;
+        callback = type;
+        type = null;
+    }
+
+    iterate = reverse ? backwards : forwards;
+
+    /**
+     * Visit `children` in `parent`.
+     */
+    all = function (children, parent) {
+        return iterate(children, function (child, index) {
+            return child && one(child, index, parent);
+        });
+    };
+
+    /**
+     * Visit a single node.
+     */
+    one = function (node, index, parent) {
+        var result;
+
+        index = index || (parent ? 0 : null);
+
+        if (!type || node.type === type) {
+            result = callback(node, index, parent || null);
+        }
+
+        if (node.children && result !== false) {
+            return all(node.children, node);
+        }
+
+        return result;
+    };
+
+    one(tree);
+}
+
+/*
+ * Expose.
+ */
+
+module.exports = visit;
+
+},{}]},{},[1])(1)
 });

@@ -13,9 +13,9 @@
   ],
   "dependencies": {
     "wooorm/retext-pos": "^1.0.0",
-    "wooorm/stemmer": "~0.1.4",
+    "wooorm/stemmer": "^0.1.4",
     "wooorm/unist-util-visit": "^1.0.0",
-    "wooorm/nlcst-to-string": "~0.1.5"
+    "wooorm/nlcst-to-string": "1.0.0"
   },
   "repository": "wooorm/retext-keywords",
   "scripts": [
