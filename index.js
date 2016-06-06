@@ -1,6 +1,6 @@
 /**
  * @author Titus Wormer
- * @copyright 2014-2015 Titus Wormer
+ * @copyright 2014-2016 Titus Wormer
  * @license MIT
  * @module retext:keywords
  * @fileoverview Keyword extraction with Retext.
