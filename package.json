@@ -31,21 +31,19 @@
     "Vladimir Starkov <iamstarkov@gmail.com>"
   ],
   "devDependencies": {
-    "browserify": "^11.0.1",
-    "chalk": "^1.0.0",
-    "eslint": "^1.0.0",
+    "browserify": "^13.0.1",
+    "eslint": "^2.0.0",
     "esmangle": "^1.0.1",
-    "istanbul": "^0.3.0",
-    "jscs": "^2.0.0",
-    "jscs-jsdoc": "^1.0.0",
-    "mdast": "^1.0.0",
-    "mdast-comment-config": "^1.0.0",
-    "mdast-github": "^1.0.0",
-    "mdast-lint": "^1.0.0",
-    "mdast-slug": "^1.0.0",
-    "mdast-validate-links": "^1.0.0",
+    "istanbul": "^0.4.0",
+    "jscs": "^3.0.0",
+    "jscs-jsdoc": "^2.0.0",
+    "remark": "^4.0.0",
+    "remark-comment-config": "^3.0.0",
+    "remark-github": "^4.0.1",
+    "remark-lint": "^4.0.0",
+    "remark-validate-links": "^3.0.0",
     "mocha": "^2.0.0",
-    "retext": "^1.0.0-rc.2"
+    "retext": "^2.0.0"
   },
   "scripts": {
     "test-api": "mocha --check-leaks test.js",
@@ -58,7 +56,7 @@
     "make": "npm run lint && npm run test-coverage",
     "build-bundle": "browserify index.js --ignore-missing --no-builtins --standalone retextKeywords > retext-keywords.js",
     "postbuild-bundle": "esmangle retext-keywords.js > retext-keywords.min.js",
-    "build-md": "mdast . --quiet",
+    "build-md": "remark . --quiet --frail",
     "build": "npm run build-bundle && npm run build-md"
   }
 }

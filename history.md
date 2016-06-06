@@ -1,8 +1,6 @@
-<!--mdast setext-->
+<!--remark setext-->
 
-<!--lint disable no-multiple-toplevel-headings-->
-
-<!--lint disable maximum-line-length-->
+<!--lint disable no-multiple-toplevel-headings maximum-line-length-->
 
 1.0.1 / 2015-08-26
 ==================

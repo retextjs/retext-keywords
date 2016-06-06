@@ -8,6 +8,8 @@
 
 'use strict';
 
+/* eslint-env commonjs */
+
 /*
  * Dependencies.
  */
@@ -73,7 +75,7 @@ function isImportant(node) {
  * Get most important words in `node`.
  *
  * @param {Node} node - Parent to search in.
- * @return {Array.<Object>}
+ * @return {Array.<Object>} - Important words.
  */
 function getImportantWords(node) {
     var words = {};
@@ -114,7 +116,7 @@ function getImportantWords(node) {
  *   `score` properties.
  * @param {number} maximum - Try to get at least `maximum`
  *   results.
- * @return {Array.<Object>}
+ * @return {Array.<Object>} - Results.
  */
 function filterResults(results, maximum) {
     var filteredResults = [];
@@ -174,7 +176,7 @@ function filterResults(results, maximum) {
  * @param {Node} parent - Parent of `node`.
  * @param {number} offset - Offset to the next node. `-1`
  *   when iterating backwards, `1` when iterating forwards.
- * @return {Object}
+ * @return {Object} - Phrase.
  */
 function findPhraseInDirection(node, index, parent, offset) {
     var children = parent.children;
@@ -213,7 +215,7 @@ function findPhraseInDirection(node, index, parent, offset) {
  * @param {Array.<*>} prev - Reversed array before `current`.
  * @param {*} current - Current thing.
  * @param {Array.<*>} next - Things after `current`.
- * @return {Array.<*>}
+ * @return {Array.<*>} - Result.
  */
 function merge(prev, current, next) {
     return prev.concat().reverse().concat([current], next);
@@ -223,7 +225,7 @@ function merge(prev, current, next) {
  * Find the phrase surrounding a node.
  *
  * @param {Object} match - Single match.
- * @return {Object}
+ * @return {Object} - One phrase.
  */
 function findPhrase(match) {
     var node = match.node;
@@ -246,7 +248,7 @@ function findPhrase(match) {
  *   `score` properties.
  * @param {number} maximum - Try to get at least `maximum`
  *   results.
- * @return {Array.<Object>}
+ * @return {Array.<Object>} - Keyphrases.
  */
 function getKeyphrases(results, maximum) {
     var stemmedPhrases = {};
