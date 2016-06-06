@@ -46,17 +46,15 @@
     "retext": "^2.0.0"
   },
   "scripts": {
-    "test-api": "mocha --check-leaks test.js",
-    "test-coverage": "istanbul cover _mocha -- test.js",
-    "test-travis": "npm run test-coverage",
-    "test": "npm run test-api",
+    "build-md": "remark . --quiet --frail",
+    "build-bundle": "browserify index.js --ignore-missing --no-builtins --standalone retextKeywords > retext-keywords.js",
+    "build-mangle": "esmangle retext-keywords.js > retext-keywords.min.js",
+    "build": "npm run build-bundle && npm run build-md && npm run build-mangle",
     "lint-api": "eslint .",
     "lint-style": "jscs --reporter inline .",
     "lint": "npm run lint-api && npm run lint-style",
-    "make": "npm run lint && npm run test-coverage",
-    "build-bundle": "browserify index.js --ignore-missing --no-builtins --standalone retextKeywords > retext-keywords.js",
-    "postbuild-bundle": "esmangle retext-keywords.js > retext-keywords.min.js",
-    "build-md": "remark . --quiet --frail",
-    "build": "npm run build-bundle && npm run build-md"
+    "test-api": "mocha --check-leaks test.js",
+    "test-coverage": "istanbul cover _mocha -- test.js",
+    "test": "npm run build && npm run lint && npm run test-coverage"
   }
 }
