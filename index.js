@@ -90,7 +90,7 @@ function getImportantWords(node) {
                 'parent': parent
             };
 
-            if (!words[stem]) {
+            if (!(stem in words)) {
                 words[stem] = {
                     'matches': [match],
                     'stem': stem,
