@@ -1,10 +1,12 @@
-# retext-keywords [![Build Status](https://img.shields.io/travis/wooorm/retext-keywords.svg)](https://travis-ci.org/wooorm/retext-keywords) [![Coverage Status](https://img.shields.io/codecov/c/github/wooorm/retext-keywords.svg)](https://codecov.io/github/wooorm/retext-keywords)
+# retext-keywords [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
 
-Keyword extraction with [**retext**](https://github.com/wooorm/retext).
+<!-- lint disable heading-increment -->
+
+Keyword extraction with [**retext**][retext].
 
 ## Installation
 
-[npm](https://docs.npmjs.com/cli/install):
+[npm][npm-install]:
 
 ```bash
 npm install retext-keywords
@@ -94,17 +96,15 @@ communities
 
 ## API
 
-### [retext](https://github.com/wooorm/retext#api)\.[use](https://github.com/wooorm/retext#retextuseplugin-options)([keywords](#api)\[, options\])
+### `retext.use(keywords[, options])`
 
 Extract keywords and key-phrases from the document.
 
-**Parameters**:
+[Read more about `use` »][use]
 
-*   `keywords` — This module;
+###### Options
 
-*   `options` (`Object`, optional):
-
-    *   `maximum` (default: 5) — Try to detect `words` and `phrases` words;
+*   `maximum` (default: 5) — Try to detect `words` and `phrases` words;
 
     Note that actual counts may differ. For example, when two words
     have the same score, both will be returned. Or when too few words
@@ -145,4 +145,24 @@ A single keyword looks as follows:
 
 ## License
 
-[MIT](LICENSE) © [Titus Wormer](http://wooorm.com)
+[MIT][license] © [Titus Wormer][author]
+
+<!-- Definitions -->
+
+[travis-badge]: https://img.shields.io/travis/wooorm/retext-keywords.svg
+
+[travis]: https://travis-ci.org/wooorm/retext-keywords
+
+[codecov-badge]: https://img.shields.io/codecov/c/github/wooorm/retext-keywords.svg
+
+[codecov]: https://codecov.io/github/wooorm/retext-keywords
+
+[npm-install]: https://docs.npmjs.com/cli/install
+
+[license]: LICENSE
+
+[author]: http://wooorm.com
+
+[retext]: https://github.com/wooorm/retext
+
+[use]: https://github.com/wooorm/retext#retextuseplugin-options
