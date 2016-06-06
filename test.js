@@ -66,7 +66,7 @@ var phraseScores = [1, 0.55, 0.53, 0.24, 0.18];
  * Tests.
  */
 
-describe('pos()', function () {
+describe('keywords()', function () {
     retext().use(keywords).process(fixture, function (err, file) {
         it('should not fail', function (done) {
             done(err);

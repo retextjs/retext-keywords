@@ -51,7 +51,7 @@
     "lint-style": "jscs --reporter inline .",
     "lint": "npm run lint-api && npm run lint-style",
     "make": "npm run lint && npm run test-coverage",
-    "build-bundle": "browserify index.js --ignore-missing --no-builtins --standalone retextPOS > retext-keywords.js",
+    "build-bundle": "browserify index.js --ignore-missing --no-builtins --standalone retextKeywords > retext-keywords.js",
     "postbuild-bundle": "esmangle retext-keywords.js > retext-keywords.min.js",
     "build-md": "mdast . --quiet",
     "build": "npm run build-bundle && npm run build-md"
