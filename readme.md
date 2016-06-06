@@ -10,12 +10,6 @@ Keyword extraction with [**retext**](https://github.com/wooorm/retext).
 npm install retext-keywords
 ```
 
-**retext-keywords** is also available for [bower](http://bower.io/#install-packages),
-[component](https://github.com/componentjs/component), and
-[duo](http://duojs.org/#getting-started), and as an AMD, CommonJS, and globals
-module, [uncompressed](retext-keywords.js) and
-[compressed](retext-keywords.min.js).
-
 ## Usage
 
 ```javascript

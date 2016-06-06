@@ -1,10 +1,7 @@
 {
   "excludeFiles": [
-    "build/",
-    "components/",
     "coverage/",
     "node_modules/",
-    "build.js",
     "retext-keywords.js",
     "retext-keywords.min.js"
   ],
