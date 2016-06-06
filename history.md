@@ -2,6 +2,13 @@
 
 <!--lint disable no-multiple-toplevel-headings-->
 
+2.0.0 / 2016-06-06
+==================
+
+*   Update dev-dependencies ([`a6315d7`](https://github.com/wooorm/retext-keywords/commit/a6315d7))
+*   Remove support for Bower, Component, Duo ([`e2343ec`](https://github.com/wooorm/retext-keywords/commit/e2343ec))
+*   Fix prototypal properties ([`c36ca4e`](https://github.com/wooorm/retext-keywords/commit/c36ca4e))
+
 1.0.1 / 2015-08-26
 ==================
 
