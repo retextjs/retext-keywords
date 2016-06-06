@@ -92,7 +92,7 @@ function getImportantWords(node) {
                 'parent': parent
             };
 
-            if (!(stem in words)) {
+            if (!(words.hasOwnProperty(stem))) {
                 words[stem] = {
                     'matches': [match],
                     'stem': stem,
@@ -264,11 +264,9 @@ function getKeyphrases(results, maximum) {
     var score;
     var first;
     var match;
-
     /*
      * Iterate over all grouped important words...
      */
-
     for (keyword in results) {
         matches = results[keyword].matches;
         length = matches.length;
@@ -280,7 +278,7 @@ function getKeyphrases(results, maximum) {
 
         while (++index < length) {
             phrase = findPhrase(matches[index]);
-            stemmedPhrase = stemmedPhrases[phrase.value];
+            stemmedPhrase = stemmedPhrases.hasOwnProperty(phrase.value) && stemmedPhrases[phrase.value];
             first = phrase.nodes[0];
 
             match = {
@@ -292,7 +290,6 @@ function getKeyphrases(results, maximum) {
              * If we've detected the same stemmed
              * phrase somewhere.
              */
-
             if (stemmedPhrase) {
                 /*
                  * Add weight per phrase to the score of
