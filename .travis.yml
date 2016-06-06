@@ -1,9 +1,26 @@
 language: node_js
-script: npm run-script test-travis
 node_js:
 - '0.10'
 - '0.11'
 - '0.12'
-- iojs
+- '4.0'
+- '5.0'
+- '6.0'
 sudo: false
 after_script: npm install codecov.io && cat ./coverage/lcov.info | codecov
+deploy:
+  - provider: npm
+    email: tituswormer@gmail.com
+    api_key:
+        secure: gozKbjN5y764ibdpiEa8YlzmQseSjR4kQdGvYoB2MHWLrJ1dKe7yGEn/Dgd5DpzqFapPEy5NjSNDOSZwkq8QuRnzlw3F5iqPClRR9ly4lmgpWOfDGJFKWnwvnAo+jaedqOIrm8lXASC9TB/ltXvpFzQ3EJQ2WngeOmNKeTUclyE=
+    on:
+      node: '6.0'
+      tags: true
+  - provider: releases
+    api_key:
+        secure: STI8hV1ZawQtuKM/ZBwsuz8ciP9QsK7b4797NnNM05Dq2cPA2rMzwGk1VIZIGGRlt22tPHXhMod3kBscqgkknHT409xs2DGWDJsY5QJFDXYau6vY1BgvGftokZwE1KG90uK2zAjitaNElD6Hl/YLc1JVZlBNKkseXxE2jjOUkOU=
+    file:
+      - "retext-keywords.js"
+      - "retext-keywords.min.js"
+    on:
+      tags: true
