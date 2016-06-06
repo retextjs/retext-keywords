@@ -19,6 +19,12 @@ var visit = require('unist-util-visit');
 var nlcstToString = require('nlcst-to-string');
 var pos = require('retext-pos');
 
+/*
+ * Methods.
+ */
+
+var own = Object.prototype.hasOwnProperty;
+
 /**
  * Get the stem of a node.
  *
@@ -92,7 +98,7 @@ function getImportantWords(node) {
                 'parent': parent
             };
 
-            if (!(stem in words)) {
+            if (!own.call(words, stem)) {
                 words[stem] = {
                     'matches': [match],
                     'stem': stem,
@@ -264,11 +270,9 @@ function getKeyphrases(results, maximum) {
     var score;
     var first;
     var match;
-
     /*
      * Iterate over all grouped important words...
      */
-
     for (keyword in results) {
         matches = results[keyword].matches;
         length = matches.length;
@@ -292,8 +296,7 @@ function getKeyphrases(results, maximum) {
              * If we've detected the same stemmed
              * phrase somewhere.
              */
-
-            if (stemmedPhrase) {
+            if (own.call(stemmedPhrases, phrase.value)) {
                 /*
                  * Add weight per phrase to the score of
                  * the phrase.

@@ -20,13 +20,16 @@ var equal = assert.strictEqual;
  * Fixture.
  *
  * First three paragraphs on Term Extraction from Wikipedia:
- * http://en.wikipedia.org/wiki/Terminology_extraction
+ * http://en.wikipedia.org/wiki/Terminology_extraction.
+ *
+ * There’s also some `constructor`s sprinkled throughout the
+ * document to check if prototypal properties work correctly.
  */
 
 var fixture = 'Terminology mining, term extraction, term recognition, or ' +
     'glossary extraction, is a subtask of information extraction. ' +
     'The goal of terminology extraction is to automatically extract ' +
-    'relevant terms from a given corpus.' +
+    'relevant terms from a given corpus constructor.' +
     '\n\n' +
     'In the semantic web era, a growing number of communities and ' +
     'networked enterprises started to access and interoperate through ' +
@@ -34,14 +37,14 @@ var fixture = 'Terminology mining, term extraction, term recognition, or ' +
     'needs is important for several web applications, like ' +
     'topic-driven web crawlers, web services, recommender systems, ' +
     'etc. The development of terminology extraction is essential to ' +
-    'the language industry.' +
+    'the language industry constructor.' +
     '\n\n' +
     'One of the first steps to model the knowledge domain of a ' +
     'virtual community is to collect a vocabulary of domain-relevant ' +
     'terms, constituting the linguistic surface manifestation of ' +
     'domain concepts. Several methods to automatically extract ' +
     'technical terms from domain-specific document warehouses have ' +
-    'been described in the literature.' +
+    'been described in the literature constructor.' +
     '\n\n' +
     'Typically, approaches to automatic term extraction make use of ' +
     'linguistic processors (part of speech tagging, phrase chunking) ' +
@@ -51,15 +54,15 @@ var fixture = 'Terminology mining, term extraction, term recognition, or ' +
     'and prepositional-NPs "board of directors" - in English, the ' +
     'first two constructs are the most frequent). Terminological ' +
     'entries are then filtered from the candidate list using ' +
-    'statistical and machine learning methods. Once filtered, ' +
+    'statistical and machine learning methods constructor. Once filtered, ' +
     'because of their low ambiguity and high specificity, these terms ' +
     'are particularly useful for conceptualizing a knowledge domain ' +
     'or for supporting the creation of a domain ontology. Furthermore, ' +
     'terminology extraction is a very useful starting point for ' +
     'semantic similarity, knowledge management, human translation ' +
-    'and machine translation, etc.';
+    'and machine translation, etc. constructor.';
 
-var keyScores = [1, 1, 0.71, 0.57, 0.57];
+var keyScores = [1, 1, 0.71, 0.71, 0.57, 0.57];
 var phraseScores = [1, 0.55, 0.53, 0.24, 0.18];
 
 /*
@@ -78,7 +81,7 @@ describe('keywords()', function () {
             assert('keywords' in namespace);
             assert('keyphrases' in namespace);
 
-            equal(namespace.keywords.length, 5);
+            equal(namespace.keywords.length, 6);
             equal(namespace.keyphrases.length, 5);
         });
 
