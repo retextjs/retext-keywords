@@ -2,6 +2,11 @@
 
 <!--lint disable no-multiple-toplevel-headings-->
 
+2.0.1 / 2016-06-07
+==================
+
+*   Fix own properties ([`fe7bd31`](https://github.com/wooorm/retext-keywords/commit/fe7bd31))
+
 2.0.0 / 2016-06-06
 ==================
 
