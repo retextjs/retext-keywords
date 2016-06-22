@@ -1,28 +1,22 @@
 /**
  * @author Titus Wormer
- * @copyright 2014-2016 Titus Wormer
+ * @copyright 2014 Titus Wormer
  * @license MIT
  * @module retext:keywords
- * @fileoverview Keyword extraction with Retext.
+ * @fileoverview Detect the sentiment of text with Retext.
  */
 
 'use strict';
 
 /* eslint-env commonjs */
 
-/*
- * Dependencies.
- */
-
+/* Dependencies. */
 var stemmer = require('stemmer');
 var visit = require('unist-util-visit');
 var nlcstToString = require('nlcst-to-string');
 var pos = require('retext-pos');
 
-/*
- * Methods.
- */
-
+/* Methods. */
 var own = Object.prototype.hasOwnProperty;
 
 /**
@@ -93,16 +87,16 @@ function getImportantWords(node) {
         if (isImportant(word)) {
             stem = stemNode(word);
             match = {
-                'node': word,
-                'index': index,
-                'parent': parent
+                node: word,
+                index: index,
+                parent: parent
             };
 
             if (!own.call(words, stem)) {
                 words[stem] = {
-                    'matches': [match],
-                    'stem': stem,
-                    'score': 1
+                    matches: [match],
+                    stem: stem,
+                    score: 1
                 };
             } else {
                 words[stem].matches.push(match);
@@ -208,9 +202,9 @@ function findPhraseInDirection(node, index, parent, offset) {
     }
 
     return {
-        'stems': stems,
-        'words': words,
-        'nodes': nodes
+        stems: stems,
+        words: words,
+        nodes: nodes
     };
 }
 
@@ -240,9 +234,9 @@ function findPhrase(match) {
     var stems = merge(prev.stems, stemNode(node), next.stems);
 
     return {
-        'stems': stems,
-        'value': stems.join(' '),
-        'nodes': merge(prev.nodes, node, next.nodes)
+        stems: stems,
+        value: stems.join(' '),
+        nodes: merge(prev.nodes, node, next.nodes)
     };
 }
 
@@ -270,47 +264,35 @@ function getKeyphrases(results, maximum) {
     var score;
     var first;
     var match;
-    /*
-     * Iterate over all grouped important words...
-     */
+
+    /* Iterate over all grouped important words... */
     for (keyword in results) {
         matches = results[keyword].matches;
         length = matches.length;
         index = -1;
 
-        /*
-         * Iterate over every occurence of a certain keyword...
-         */
-
+        /* Iterate over every occurence of a certain keyword... */
         while (++index < length) {
             phrase = findPhrase(matches[index]);
             stemmedPhrase = stemmedPhrases[phrase.value];
             first = phrase.nodes[0];
 
             match = {
-                'nodes': phrase.nodes,
-                'parent': matches[index].parent
+                nodes: phrase.nodes,
+                parent: matches[index].parent
             };
 
-            /*
-             * If we've detected the same stemmed
-             * phrase somewhere.
-             */
+            /* If we've detected the same stemmed
+             * phrase somewhere. */
             if (own.call(stemmedPhrases, phrase.value)) {
-                /*
-                 * Add weight per phrase to the score of
-                 * the phrase.
-                 */
-
+                /* Add weight per phrase to the score of
+                 * the phrase. */
                 stemmedPhrase.score += stemmedPhrase.weight;
 
-                /*
-                 * If this is the first time we walk over
+                /* If this is the first time we walk over
                  * the phrase (exact match but containing
                  * another important word), add it to the
-                 * list of matching phrases.
-                 */
-
+                 * list of matching phrases. */
                 if (initialWords.indexOf(first) === -1) {
                     initialWords.push(first);
                     stemmedPhrase.matches.push(match);
@@ -322,21 +304,18 @@ function getKeyphrases(results, maximum) {
 
                 initialWords.push(first);
 
-                /*
-                 * For every stem in phrase, add its
-                 * score to score.
-                 */
-
+                /* For every stem in phrase, add its
+                 * score to score. */
                 while (stems[++otherIndex]) {
                     score += results[stems[otherIndex]].score;
                 }
 
                 stemmedPhrases[phrase.value] = {
-                    'score': score,
-                    'weight': score,
-                    'stems': stems,
-                    'value': phrase.value,
-                    'matches': [match]
+                    score: score,
+                    weight: score,
+                    stems: stems,
+                    value: phrase.value,
+                    matches: [match]
                 };
             }
         }
@@ -345,13 +324,10 @@ function getKeyphrases(results, maximum) {
     for (stemmedPhrase in stemmedPhrases) {
         phrase = stemmedPhrases[stemmedPhrase];
 
-        /*
-         * Modify its score to be the rounded result of
+        /* Modify its score to be the rounded result of
          * multiplying it with the number of occurances,
          * and dividing it by the ammount of words in the
-         * phrase.
-         */
-
+         * phrase. */
         phrase.score = Math.round(
             phrase.score * phrase.matches.length / phrase.stems.length
         );
@@ -376,9 +352,9 @@ function cloneMatches(words) {
     for (key in words) {
         match = words[key];
         result[key] = {
-            'matches': match.matches,
-            'stem': match.stem,
-            'score': match.score
+            matches: match.matches,
+            stem: match.stem,
+            score: match.score
         }
     }
 
@@ -416,8 +392,5 @@ function attacher(retext, options) {
     return transformer;
 }
 
-/*
- * Expose.
- */
-
+/* Expose. */
 module.exports = attacher;

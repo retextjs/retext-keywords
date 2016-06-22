@@ -1,31 +1,29 @@
-'use strict';
-
-/* eslint-env node, mocha */
-
-/*
- * Dependencies.
+/**
+ * @author Titus Wormer
+ * @copyright 2014 Titus Wormer
+ * @license MIT
+ * @module retext:keywords
+ * @fileoverview Test suite for `retext-keywords`.
  */
 
-var assert = require('assert');
+'use strict';
+
+/* eslint-env node */
+/* jscs:disable jsDoc */
+/* jscs:disable maximumLineLength */
+
+/* Dependencies. */
+var test = require('tape');
 var retext = require('retext');
 var keywords = require('./');
 
-/*
- * Methods.
- */
-
-var equal = assert.strictEqual;
-
-/*
- * Fixture.
+/* Fixture.
  *
  * First three paragraphs on Term Extraction from Wikipedia:
  * http://en.wikipedia.org/wiki/Terminology_extraction.
  *
  * There’s also some `constructor`s sprinkled throughout the
- * document to check if prototypal properties work correctly.
- */
-
+ * document to check if prototypal properties work correctly. */
 var fixture = 'Terminology mining, term extraction, term recognition, or ' +
     'glossary extraction, is a subtask of information extraction. ' +
     'The goal of terminology extraction is to automatically extract ' +
@@ -65,91 +63,108 @@ var fixture = 'Terminology mining, term extraction, term recognition, or ' +
 var keyScores = [1, 1, 0.71, 0.71, 0.57, 0.57];
 var phraseScores = [1, 0.55, 0.53, 0.24, 0.18];
 
-/*
- * Tests.
- */
-
-describe('keywords()', function () {
+/* Tests. */
+test('keywords()', function (t) {
     retext().use(keywords).process(fixture, function (err, file) {
-        it('should not fail', function (done) {
-            done(err);
-        });
-
         var namespace = file.namespace('retext');
 
-        it('should work', function () {
-            assert('keywords' in namespace);
-            assert('keyphrases' in namespace);
+        t.ifErr(err, 'should not fail');
 
-            equal(namespace.keywords.length, 6);
-            equal(namespace.keyphrases.length, 5);
+        t.test('should work', function (st) {
+            st.ok('keywords' in namespace);
+            st.assert('keyphrases' in namespace);
+
+            st.equal(namespace.keywords.length, 6);
+            st.equal(namespace.keyphrases.length, 5);
+
+            st.end();
         });
 
-        it('should have scores', function () {
+        t.test('should have scores', function (st) {
             namespace.keywords.forEach(function (keyword, n) {
-                equal(Math.round(keyword.score * 1e2) / 1e2, keyScores[n]);
+                st.equal(
+                    Math.round(keyword.score * 1e2) / 1e2,
+                    keyScores[n]
+                );
             });
 
             namespace.keyphrases.forEach(function (phrase, n) {
-                equal(Math.round(phrase.score * 1e2) / 1e2, phraseScores[n]);
+                st.equal(
+                    Math.round(phrase.score * 1e2) / 1e2,
+                    phraseScores[n]
+                );
             });
+
+            st.end();
         });
 
-        it('should have stems', function () {
+        t.test('should have stems', function (st) {
             namespace.keywords.forEach(function (keyword) {
-                assert('stem' in keyword);
+                st.ok('stem' in keyword);
             });
 
             namespace.keyphrases.forEach(function (phrase) {
-                assert('stems' in phrase);
+                st.ok('stems' in phrase);
             });
+
+            st.end();
         });
 
-        it('should have matches', function () {
+        t.test('should have matches', function (st) {
             namespace.keywords.forEach(function (keyword) {
-                assert('matches' in keyword);
+                st.ok('matches' in keyword);
             });
 
             namespace.keyphrases.forEach(function (phrase) {
-                assert('matches' in phrase);
+                st.ok('matches' in phrase);
             });
+
+            st.end();
         });
 
-        describe('keywords[n].matches[n]', function () {
-            it('should have node, index, and parent', function () {
-                namespace.keywords.forEach(function (keyword) {
-                    keyword.matches.forEach(function (match) {
-                        assert('node' in match);
-                        assert('parent' in match);
-                        assert('index' in match);
-                    });
-                });
-            });
-        })
-
-        describe('keyphrases', function () {
-            it('should have a weight', function () {
-                namespace.keyphrases.forEach(function (phrase) {
-                    assert('weight' in phrase);
+        t.test('keywords[n].matches[n]', function (st) {
+            namespace.keywords.forEach(function (keyword) {
+                keyword.matches.forEach(function (match) {
+                    st.assert('node' in match);
+                    st.assert('parent' in match);
+                    st.assert('index' in match);
                 });
             });
 
-            it('should have a value', function () {
-                namespace.keyphrases.forEach(function (phrase) {
-                    assert('value' in phrase);
-                });
-            });
+            st.end();
         })
 
-        describe('keyphrases[n].matches[n]', function () {
-            it('should have nodes and parent', function () {
+        t.test('keyphrases', function (st) {
+            st.test('should have a weight', function (sst) {
                 namespace.keyphrases.forEach(function (phrase) {
-                    phrase.matches.forEach(function (match) {
-                        assert('nodes' in match);
-                        assert('parent' in match);
-                    });
+                    sst.ok('weight' in phrase);
+                });
+
+                sst.end();
+            });
+
+            st.test('should have a value', function (sst) {
+                namespace.keyphrases.forEach(function (phrase) {
+                    sst.ok('value' in phrase);
+                });
+
+                sst.end();
+            });
+
+            st.end();
+        });
+
+        t.test('keyphrases[n].matches[n]', function (st) {
+            namespace.keyphrases.forEach(function (phrase) {
+                phrase.matches.forEach(function (match) {
+                    st.ok('nodes' in match);
+                    st.ok('parent' in match);
                 });
             });
+
+            st.end();
         })
+
+        t.end();
     });
 });

@@ -1,6 +1,6 @@
 # retext-keywords [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
 
-<!-- lint disable heading-increment -->
+<!--lint disable heading-increment list-item-spacing-->
 
 Keyword extraction with [**retext**][retext].
 
@@ -11,6 +11,9 @@ Keyword extraction with [**retext**][retext].
 ```bash
 npm install retext-keywords
 ```
+
+**retext-keywords** is also available as an AMD, CommonJS, and
+globals module, [uncompressed and compressed][releases].
 
 ## Usage
 
@@ -96,23 +99,13 @@ communities
 
 ## API
 
-### `retext.use(keywords[, options])`
+### `retext().use(keywords[, options])`
 
 Extract keywords and key-phrases from the document.
 
-[Read more about `use` »][use]
-
-###### Options
-
-*   `maximum` (default: 5) — Try to detect `words` and `phrases` words;
-
-    Note that actual counts may differ. For example, when two words
-    have the same score, both will be returned. Or when too few words
-    exist, less will be returned. the same goes for phrases.
-
 The results are stored in the `retext` namespace on the virtual file:
 keywords at `file.namespace('retext').keywords` and key-phrases at
-`file.namespace('retext').keyphrases`. Both are lists.
+`file.namespace('retext').keyphrases`.  Both are lists.
 
 A single keyword looks as follows:
 
@@ -143,6 +136,15 @@ A single keyword looks as follows:
 }
 ```
 
+###### `options`
+
+*   `maximum` (default: `5`) — Try to detect `words` and `phrases`
+    words;
+
+    Note that actual counts may differ. For example, when two words
+    have the same score, both will be returned. Or when too few words
+    exist, less will be returned. the same goes for phrases.
+
 ## License
 
 [MIT][license] © [Titus Wormer][author]
@@ -159,10 +161,10 @@ A single keyword looks as follows:
 
 [npm-install]: https://docs.npmjs.com/cli/install
 
+[releases]: https://github.com/wooorm/retext-keywords/releases
+
 [license]: LICENSE
 
 [author]: http://wooorm.com
 
 [retext]: https://github.com/wooorm/retext
-
-[use]: https://github.com/wooorm/retext#retextuseplugin-options
