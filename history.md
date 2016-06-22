@@ -2,6 +2,11 @@
 
 <!--lint disable no-multiple-toplevel-headings-->
 
+2.0.2 / 2016-06-22
+==================
+
+*   Update code-style ([`4749704`](https://github.com/wooorm/retext-keywords/commit/4749704))
+
 2.0.1 / 2016-06-07
 ==================
 
