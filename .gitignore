@@ -1,6 +1,7 @@
 .DS_Store
 *.log
-node_modules/
+.nyc_output/
 coverage/
+node_modules/
 retext-keywords.js
 retext-keywords.min.js

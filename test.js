@@ -8,10 +8,6 @@
 
 'use strict';
 
-/* eslint-env node */
-/* jscs:disable jsDoc */
-/* jscs:disable maximumLineLength */
-
 /* Dependencies. */
 var test = require('tape');
 var retext = require('retext');
@@ -65,106 +61,104 @@ var phraseScores = [1, 0.55, 0.53, 0.24, 0.18];
 
 /* Tests. */
 test('keywords()', function (t) {
-    retext().use(keywords).process(fixture, function (err, file) {
-        var namespace = file.namespace('retext');
+  retext().use(keywords).process(fixture, function (err, file) {
+    t.ifErr(err, 'should not fail');
 
-        t.ifErr(err, 'should not fail');
+    t.test('should work', function (st) {
+      st.ok('keywords' in file.data);
+      st.assert('keyphrases' in file.data);
 
-        t.test('should work', function (st) {
-            st.ok('keywords' in namespace);
-            st.assert('keyphrases' in namespace);
+      st.equal(file.data.keywords.length, 6);
+      st.equal(file.data.keyphrases.length, 5);
 
-            st.equal(namespace.keywords.length, 6);
-            st.equal(namespace.keyphrases.length, 5);
-
-            st.end();
-        });
-
-        t.test('should have scores', function (st) {
-            namespace.keywords.forEach(function (keyword, n) {
-                st.equal(
-                    Math.round(keyword.score * 1e2) / 1e2,
-                    keyScores[n]
-                );
-            });
-
-            namespace.keyphrases.forEach(function (phrase, n) {
-                st.equal(
-                    Math.round(phrase.score * 1e2) / 1e2,
-                    phraseScores[n]
-                );
-            });
-
-            st.end();
-        });
-
-        t.test('should have stems', function (st) {
-            namespace.keywords.forEach(function (keyword) {
-                st.ok('stem' in keyword);
-            });
-
-            namespace.keyphrases.forEach(function (phrase) {
-                st.ok('stems' in phrase);
-            });
-
-            st.end();
-        });
-
-        t.test('should have matches', function (st) {
-            namespace.keywords.forEach(function (keyword) {
-                st.ok('matches' in keyword);
-            });
-
-            namespace.keyphrases.forEach(function (phrase) {
-                st.ok('matches' in phrase);
-            });
-
-            st.end();
-        });
-
-        t.test('keywords[n].matches[n]', function (st) {
-            namespace.keywords.forEach(function (keyword) {
-                keyword.matches.forEach(function (match) {
-                    st.assert('node' in match);
-                    st.assert('parent' in match);
-                    st.assert('index' in match);
-                });
-            });
-
-            st.end();
-        })
-
-        t.test('keyphrases', function (st) {
-            st.test('should have a weight', function (sst) {
-                namespace.keyphrases.forEach(function (phrase) {
-                    sst.ok('weight' in phrase);
-                });
-
-                sst.end();
-            });
-
-            st.test('should have a value', function (sst) {
-                namespace.keyphrases.forEach(function (phrase) {
-                    sst.ok('value' in phrase);
-                });
-
-                sst.end();
-            });
-
-            st.end();
-        });
-
-        t.test('keyphrases[n].matches[n]', function (st) {
-            namespace.keyphrases.forEach(function (phrase) {
-                phrase.matches.forEach(function (match) {
-                    st.ok('nodes' in match);
-                    st.ok('parent' in match);
-                });
-            });
-
-            st.end();
-        })
-
-        t.end();
+      st.end();
     });
+
+    t.test('should have scores', function (st) {
+      file.data.keywords.forEach(function (keyword, n) {
+        st.equal(
+          Math.round(keyword.score * 1e2) / 1e2,
+          keyScores[n]
+        );
+      });
+
+      file.data.keyphrases.forEach(function (phrase, n) {
+        st.equal(
+          Math.round(phrase.score * 1e2) / 1e2,
+          phraseScores[n]
+        );
+      });
+
+      st.end();
+    });
+
+    t.test('should have stems', function (st) {
+      file.data.keywords.forEach(function (keyword) {
+        st.ok('stem' in keyword);
+      });
+
+      file.data.keyphrases.forEach(function (phrase) {
+        st.ok('stems' in phrase);
+      });
+
+      st.end();
+    });
+
+    t.test('should have matches', function (st) {
+      file.data.keywords.forEach(function (keyword) {
+        st.ok('matches' in keyword);
+      });
+
+      file.data.keyphrases.forEach(function (phrase) {
+        st.ok('matches' in phrase);
+      });
+
+      st.end();
+    });
+
+    t.test('keywords[n].matches[n]', function (st) {
+      file.data.keywords.forEach(function (keyword) {
+        keyword.matches.forEach(function (match) {
+          st.assert('node' in match);
+          st.assert('parent' in match);
+          st.assert('index' in match);
+        });
+      });
+
+      st.end();
+    });
+
+    t.test('keyphrases', function (st) {
+      st.test('should have a weight', function (sst) {
+        file.data.keyphrases.forEach(function (phrase) {
+          sst.ok('weight' in phrase);
+        });
+
+        sst.end();
+      });
+
+      st.test('should have a value', function (sst) {
+        file.data.keyphrases.forEach(function (phrase) {
+          sst.ok('value' in phrase);
+        });
+
+        sst.end();
+      });
+
+      st.end();
+    });
+
+    t.test('keyphrases[n].matches[n]', function (st) {
+      file.data.keyphrases.forEach(function (phrase) {
+        phrase.matches.forEach(function (match) {
+          st.ok('nodes' in match);
+          st.ok('parent' in match);
+        });
+      });
+
+      st.end();
+    });
+
+    t.end();
+  });
 });

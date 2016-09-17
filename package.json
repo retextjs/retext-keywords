@@ -11,20 +11,18 @@
     "extraction",
     "retext"
   ],
-  "files": [
-    "index.js"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wooorm/retext-keywords.git"
-  },
+  "repository": "https://github.com/wooorm/retext-keywords",
   "bugs": "https://github.com/wooorm/retext-keywords/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
     "Vladimir Starkov <iamstarkov@gmail.com>"
   ],
+  "files": [
+    "index.js"
+  ],
   "dependencies": {
+    "has": "^1.0.1",
     "nlcst-to-string": "^2.0.0",
     "retext-pos": "^1.0.0",
     "stemmer": "^0.1.4",
@@ -32,29 +30,44 @@
   },
   "devDependencies": {
     "browserify": "^13.0.1",
-    "eslint": "^2.0.0",
     "esmangle": "^1.0.1",
-    "istanbul": "^0.4.0",
-    "jscs": "^3.0.0",
-    "jscs-jsdoc": "^2.0.0",
-    "remark-cli": "^1.0.0",
-    "remark-comment-config": "^4.0.0",
-    "remark-github": "^5.0.0",
-    "remark-lint": "^4.0.0",
-    "remark-validate-links": "^4.0.0",
-    "retext": "^3.0.0",
-    "tape": "^4.0.0"
+    "nyc": "^8.3.0",
+    "remark-cli": "^2.0.0",
+    "remark-preset-wooorm": "^1.0.0",
+    "retext": "^4.0.0",
+    "tape": "^4.0.0",
+    "xo": "^0.16.0"
   },
   "scripts": {
     "build-md": "remark . --quiet --frail",
     "build-bundle": "browserify index.js --ignore-missing --bare -s retextKeywords > retext-keywords.js",
     "build-mangle": "esmangle retext-keywords.js > retext-keywords.min.js",
     "build": "npm run build-md && npm run build-bundle && npm run build-mangle",
-    "lint-api": "eslint .",
-    "lint-style": "jscs --reporter inline .",
-    "lint": "npm run lint-api && npm run lint-style",
+    "lint": "xo",
     "test-api": "node test.js",
-    "test-coverage": "istanbul cover test.js",
+    "test-coverage": "nyc --reporter lcov tape test.js",
     "test": "npm run build && npm run lint && npm run test-coverage"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "lines": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "xo": {
+    "space": true,
+    "rules": {
+      "no-negated-condition": "off",
+      "guard-for-in": "off",
+      "max-lines": "off",
+      "max-nested-callbacks": "off"
+    },
+    "ignores": [
+      "retext-keywords.js"
+    ]
+  },
+  "remarkConfig": {
+    "output": true,
+    "presets": "wooorm"
   }
 }
