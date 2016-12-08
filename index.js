@@ -1,63 +1,29 @@
-/**
- * @author Titus Wormer
- * @copyright 2014 Titus Wormer
- * @license MIT
- * @module retext:keywords
- * @fileoverview Detect the sentiment of text with Retext.
- */
-
 'use strict';
 
-/* Dependencies. */
 var has = require('has');
 var stemmer = require('stemmer');
 var visit = require('unist-util-visit');
 var nlcstToString = require('nlcst-to-string');
 var pos = require('retext-pos');
 
-/* Expose. */
-module.exports = attacher;
+module.exports = keywords;
 
-/**
- * Attach.
- *
- * @param {Retext} retext - Instance.
- * @param {Object?} [options] - Configuration.
- * @param {number?} [options.maximum] - Try to get at
- *   least `maximum` results.
- * @return {Function} - `transformer`.
- */
-function attacher(retext, options) {
+function keywords(retext, options) {
   var maximum = (options || {}).maximum || 5;
 
   retext.use(pos);
 
   return transformer;
 
-  /**
-   * Attach keywords in `cst` to `file`.
-   *
-   * @param {NLCSTNode} cst - Node.
-   * @param {VFile} file - Virtual file.
-   */
-  function transformer(cst, file) {
-    var important = getImportantWords(cst);
+  function transformer(tree, file) {
+    var important = getImportantWords(tree);
 
     file.data.keywords = filterResults(cloneMatches(important), maximum);
     file.data.keyphrases = getKeyphrases(important, maximum);
   }
 }
 
-/**
- * Get following or preceding important words or white space.
- *
- * @param {Node} node - Node to start search at.
- * @param {number} index - Position of `node` in `parent`.
- * @param {Node} parent - Parent of `node`.
- * @param {number} offset - Offset to the next node. `-1`
- *   when iterating backwards, `1` when iterating forwards.
- * @return {Object} - Phrase.
- */
+/* Get following or preceding important words or white space. */
 function findPhraseInDirection(node, index, parent, offset) {
   var children = parent.children;
   var nodes = [];
@@ -88,16 +54,7 @@ function findPhraseInDirection(node, index, parent, offset) {
   };
 }
 
-/**
- * Get the top important phrases in `self`.
- *
- * @param {Object.<string, Object>} results - Map of stems
- *   mapping to objects containing `nodes`, `stem`, and
- *   `score` properties.
- * @param {number} maximum - Try to get at least `maximum`
- *   results.
- * @return {Array.<Object>} - Keyphrases.
- */
+/* Get the top important phrases in `self`. */
 function getKeyphrases(results, maximum) {
   var stemmedPhrases = {};
   var initialWords = [];
@@ -184,16 +141,7 @@ function getKeyphrases(results, maximum) {
   return filterResults(stemmedPhrases, maximum);
 }
 
-/**
- * Get the top results from an occurance map.
- *
- * @param {Object.<string, Object>} results - Map of stems
- *   mapping to objects containing `nodes`, `stem`, and
- *   `score` properties.
- * @param {number} maximum - Try to get at least `maximum`
- *   results.
- * @return {Array.<Object>} - Results.
- */
+/* Get the top results from an occurance map. */
 function filterResults(results, maximum) {
   var filteredResults = [];
   var indices = [];
@@ -244,25 +192,13 @@ function filterResults(results, maximum) {
   return filteredResults;
 }
 
-/**
- * Merge a previous array, with a current value, and
- * a following array.
- *
- * @param {Array.<*>} prev - Reversed array before `current`.
- * @param {*} current - Current thing.
- * @param {Array.<*>} next - Things after `current`.
- * @return {Array.<*>} - Result.
- */
+/* Merge a previous array, with a current value, and
+ * a following array. */
 function merge(prev, current, next) {
   return prev.concat().reverse().concat([current], next);
 }
 
-/**
- * Find the phrase surrounding a node.
- *
- * @param {Object} match - Single match.
- * @return {Object} - One phrase.
- */
+/* Find the phrase surrounding a node. */
 function findPhrase(match) {
   var node = match.node;
   var prev = findPhraseInDirection(node, match.index, match.parent, -1);
@@ -276,12 +212,7 @@ function findPhrase(match) {
   };
 }
 
-/**
- * Get most important words in `node`.
- *
- * @param {Node} node - Parent to search in.
- * @return {Array.<Object>} - Important words.
- */
+/* Get most important words in `node`. */
 function getImportantWords(node) {
   var words = {};
 
@@ -315,14 +246,8 @@ function getImportantWords(node) {
   }
 }
 
-/**
- * Clone the given map of words.
- *
- * This is a two level-deep clone.
- *
- * @param {Object} words - Important words.
- * @return {Object} - Cloned words.
- */
+/* Clone the given map of words.
+ * This is a two level-deep clone. */
 function cloneMatches(words) {
   var result = {};
   var key;
