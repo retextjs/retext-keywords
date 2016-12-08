@@ -24,7 +24,7 @@
   "dependencies": {
     "has": "^1.0.1",
     "nlcst-to-string": "^2.0.0",
-    "retext-pos": "^1.0.0",
+    "retext-pos": "^2.0.0",
     "stemmer": "^1.0.0",
     "unist-util-visit": "^1.0.0"
   },
