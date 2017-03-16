@@ -8,10 +8,12 @@ var pos = require('retext-pos');
 
 module.exports = keywords;
 
-function keywords(retext, options) {
-  var maximum = (options || {}).maximum || 5;
+function keywords(options) {
+  this.use(pos).use(gatherKeywords, options);
+}
 
-  retext.use(pos);
+function gatherKeywords(options) {
+  var maximum = (options || {}).maximum || 5;
 
   return transformer;
 

@@ -29,12 +29,12 @@
     "unist-util-visit": "^1.0.0"
   },
   "devDependencies": {
-    "browserify": "^13.0.1",
+    "browserify": "^14.1.0",
     "esmangle": "^1.0.1",
     "nyc": "^10.0.0",
-    "remark-cli": "^2.0.0",
-    "remark-preset-wooorm": "^1.0.0",
-    "retext": "^4.0.0",
+    "remark-cli": "^3.0.0",
+    "remark-preset-wooorm": "^2.0.0",
+    "retext": "^5.0.0",
     "tape": "^4.0.0",
     "xo": "^0.17.1"
   },
@@ -67,7 +67,8 @@
     ]
   },
   "remarkConfig": {
-    "output": true,
-    "presets": "wooorm"
+    "plugins": [
+      "preset-wooorm"
+    ]
   }
 }
