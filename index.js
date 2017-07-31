@@ -1,12 +1,13 @@
 'use strict';
 
-var has = require('has');
 var stemmer = require('stemmer');
 var visit = require('unist-util-visit');
 var nlcstToString = require('nlcst-to-string');
 var pos = require('retext-pos');
 
 module.exports = keywords;
+
+var own = {}.hasOwnProperty;
 
 function keywords(options) {
   this.use(pos).use(gatherKeywords, options);
@@ -91,7 +92,7 @@ function getKeyphrases(results, maximum) {
 
       /* If we've detected the same stemmed
        * phrase somewhere. */
-      if (has(stemmedPhrases, phrase.value)) {
+      if (own.call(stemmedPhrases, phrase.value)) {
         /* Add weight per phrase to the score of
          * the phrase. */
         stemmedPhrase.score += stemmedPhrase.weight;
@@ -234,7 +235,7 @@ function getImportantWords(node) {
         parent: parent
       };
 
-      if (!has(words, stem)) {
+      if (!own.call(words, stem)) {
         words[stem] = {
           matches: [match],
           stem: stem,
