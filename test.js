@@ -1,23 +1,11 @@
-/**
- * @author Titus Wormer
- * @copyright 2014 Titus Wormer
- * @license MIT
- * @module retext:keywords
- * @fileoverview Test suite for `retext-keywords`.
- */
-
 'use strict';
 
-/* Dependencies. */
 var test = require('tape');
 var retext = require('retext');
 var keywords = require('./');
 
-/* Fixture.
- *
- * First three paragraphs on Term Extraction from Wikipedia:
+/* Fixture: First three paragraphs on Term Extraction from Wikipedia:
  * http://en.wikipedia.org/wiki/Terminology_extraction.
- *
  * There’s also some `constructor`s sprinkled throughout the
  * document to check if prototypal properties work correctly. */
 var fixture = 'Terminology mining, term extraction, term recognition, or ' +
@@ -59,7 +47,6 @@ var fixture = 'Terminology mining, term extraction, term recognition, or ' +
 var keyScores = [1, 1, 0.71, 0.71, 0.57, 0.57];
 var phraseScores = [1, 0.55, 0.53, 0.24, 0.18];
 
-/* Tests. */
 test('keywords()', function (t) {
   retext().use(keywords).process(fixture, function (err, file) {
     t.ifErr(err, 'should not fail');
