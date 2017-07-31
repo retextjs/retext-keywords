@@ -11,7 +11,7 @@
     "extraction",
     "retext"
   ],
-  "repository": "https://github.com/wooorm/retext-keywords",
+  "repository": "wooorm/retext-keywords",
   "bugs": "https://github.com/wooorm/retext-keywords/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
@@ -30,21 +30,21 @@
   },
   "devDependencies": {
     "browserify": "^14.1.0",
-    "esmangle": "^1.0.1",
-    "nyc": "^10.0.0",
-    "remark-cli": "^3.0.0",
-    "remark-preset-wooorm": "^2.0.0",
+    "esmangle": "^1.0.0",
+    "nyc": "^11.0.0",
+    "remark-cli": "^4.0.0",
+    "remark-preset-wooorm": "^3.0.0",
     "retext": "^5.0.0",
     "tape": "^4.0.0",
-    "xo": "^0.17.1"
+    "xo": "^0.18.0"
   },
   "scripts": {
-    "build-md": "remark . --quiet --frail",
+    "build-md": "remark . -qfo",
     "build-bundle": "browserify index.js --ignore-missing --bare -s retextKeywords > retext-keywords.js",
     "build-mangle": "esmangle retext-keywords.js > retext-keywords.min.js",
     "build": "npm run build-md && npm run build-bundle && npm run build-mangle",
     "lint": "xo",
-    "test-api": "node test.js",
+    "test-api": "node test",
     "test-coverage": "nyc --reporter lcov tape test.js",
     "test": "npm run build && npm run lint && npm run test-coverage"
   },
@@ -56,6 +56,7 @@
   },
   "xo": {
     "space": true,
+    "esnext": false,
     "rules": {
       "no-negated-condition": "off",
       "guard-for-in": "off",
