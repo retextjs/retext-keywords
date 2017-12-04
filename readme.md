@@ -117,6 +117,13 @@ A single keyword looks as follows:
     have the same score, both will be returned.  Or when too few words
     exist, less will be returned. the same goes for phrases.
 
+## Contribute
+
+See [`contribute.md` in `retextjs/retext`][contribute] for ways to get started.
+
+This organisation has a [Code of Conduct][coc].  By interacting with this
+repository, organisation, or community you agree to abide by its terms.
+
 ## License
 
 [MIT][license] © [Titus Wormer][author]
@@ -140,3 +147,7 @@ A single keyword looks as follows:
 [retext]: https://github.com/retextjs/retext
 
 [term-extraction]: http://en.wikipedia.org/wiki/Terminology_extraction
+
+[contribute]: https://github.com/retextjs/retext/blob/master/contributing.md
+
+[coc]: https://github.com/retextjs/retext/blob/master/code-of-conduct.md
