@@ -123,13 +123,13 @@ A single keyword looks as follows:
 
 <!-- Definitions -->
 
-[travis-badge]: https://img.shields.io/travis/wooorm/retext-keywords.svg
+[travis-badge]: https://img.shields.io/travis/retextjs/retext-keywords.svg
 
-[travis]: https://travis-ci.org/wooorm/retext-keywords
+[travis]: https://travis-ci.org/retextjs/retext-keywords
 
-[codecov-badge]: https://img.shields.io/codecov/c/github/wooorm/retext-keywords.svg
+[codecov-badge]: https://img.shields.io/codecov/c/github/retextjs/retext-keywords.svg
 
-[codecov]: https://codecov.io/github/wooorm/retext-keywords
+[codecov]: https://codecov.io/github/retextjs/retext-keywords
 
 [npm]: https://docs.npmjs.com/cli/install
 
@@ -137,6 +137,6 @@ A single keyword looks as follows:
 
 [author]: http://wooorm.com
 
-[retext]: https://github.com/wooorm/retext
+[retext]: https://github.com/retextjs/retext
 
 [term-extraction]: http://en.wikipedia.org/wiki/Terminology_extraction

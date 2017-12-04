@@ -11,8 +11,8 @@
     "extraction",
     "retext"
   ],
-  "repository": "wooorm/retext-keywords",
-  "bugs": "https://github.com/wooorm/retext-keywords/issues",
+  "repository": "retextjs/retext-keywords",
+  "bugs": "https://github.com/retextjs/retext-keywords/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
