@@ -12,7 +12,7 @@ npm install retext-keywords
 
 ## Usage
 
-Say we have the following file, `example.txt`, with the first three paragraphs
+Say we have the following file, `example.txt`, with the first four paragraphs
 on [Term Extraction][term-extraction] from Wikipedia:
 
 ```text
