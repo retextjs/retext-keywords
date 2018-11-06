@@ -5,7 +5,7 @@ var retext = require('retext');
 var keywords = require('./');
 
 /* Fixture: First three paragraphs on Term Extraction from Wikipedia:
- * http://en.wikipedia.org/wiki/Terminology_extraction.
+ * https://en.wikipedia.org/wiki/Terminology_extraction.
  * There’s also some `constructor`s sprinkled throughout the
  * document to check if prototypal properties work correctly. */
 var fixture = 'Terminology mining, term extraction, term recognition, or ' +

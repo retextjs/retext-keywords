@@ -147,11 +147,11 @@ repository, organisation, or community you agree to abide by its terms.
 
 [license]: license
 
-[author]: http://wooorm.com
+[author]: https://wooorm.com
 
 [retext]: https://github.com/retextjs/retext
 
-[term-extraction]: http://en.wikipedia.org/wiki/Terminology_extraction
+[term-extraction]: https://en.wikipedia.org/wiki/Terminology_extraction
 
 [contributing]: https://github.com/retextjs/retext/blob/master/contributing.md
 
