@@ -2,7 +2,7 @@
 
 var test = require('tape');
 var retext = require('retext');
-var keywords = require('./');
+var keywords = require('.');
 
 /* Fixture: First three paragraphs on Term Extraction from Wikipedia:
  * https://en.wikipedia.org/wiki/Terminology_extraction.
