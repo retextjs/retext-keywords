@@ -28,31 +28,31 @@ Typically, approaches to automatic term extraction make use of linguistic proces
 And our script, `example.js`, looks as follows:
 
 ```javascript
-var vfile = require('to-vfile');
-var retext = require('retext');
-var keywords = require('retext-keywords');
-var toString = require('nlcst-to-string');
+var vfile = require('to-vfile')
+var retext = require('retext')
+var keywords = require('retext-keywords')
+var toString = require('nlcst-to-string')
 
 retext()
   .use(keywords)
-  .process(vfile.readSync('example.txt'), done);
+  .process(vfile.readSync('example.txt'), done)
 
 function done(err, file) {
-  if (err) throw err;
+  if (err) throw err
 
-  console.log('Keywords:');
-  file.data.keywords.forEach(function (keyword) {
-    console.log(toString(keyword.matches[0].node));
-  });
+  console.log('Keywords:')
+  file.data.keywords.forEach(function(keyword) {
+    console.log(toString(keyword.matches[0].node))
+  })
 
-  console.log();
-  console.log('Key-phrases:');
-  file.data.keyphrases.forEach(function (phrase) {
-    console.log(phrase.matches[0].nodes.map(stringify).join(''));
+  console.log()
+  console.log('Key-phrases:')
+  file.data.keyphrases.forEach(function(phrase) {
+    console.log(phrase.matches[0].nodes.map(stringify).join(''))
     function stringify(value) {
       return toString(value)
     }
-  });
+  })
 }
 ```
 
