@@ -5,3 +5,4 @@ coverage/
 node_modules/
 retext-keywords.js
 retext-keywords.min.js
+yarn.lock
