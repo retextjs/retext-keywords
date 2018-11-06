@@ -8,7 +8,7 @@ deploy:
   provider: releases
   skip_cleanup: true
   api_key:
-    secure: STI8hV1ZawQtuKM/ZBwsuz8ciP9QsK7b4797NnNM05Dq2cPA2rMzwGk1VIZIGGRlt22tPHXhMod3kBscqgkknHT409xs2DGWDJsY5QJFDXYau6vY1BgvGftokZwE1KG90uK2zAjitaNElD6Hl/YLc1JVZlBNKkseXxE2jjOUkOU=
+    secure: lOrR3DSymALxQEuoWpYJ6DkDLVCf3VZdY6htZTfRnH8qcmT83nY4tQM45ZlmaaD4rcLa7O4qdp49uSCxDBC4o/cVlgl3dT8Z7+1PvDEUsr9Ppk63CeIKwgWsh2UFznF/TdX74VqlhzWSM5XCNMlm1ppeDDkzMhXVbv1nBDSI+OI=
   file:
     - "retext-keywords.js"
     - "retext-keywords.min.js"
