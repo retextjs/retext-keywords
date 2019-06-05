@@ -1,7 +1,7 @@
 language: node_js
 node_js:
-- lts/boron
-- node
+  - lts/dubnium
+  - node
 sudo: false
 after_script: bash <(curl -s https://codecov.io/bash)
 deploy:
@@ -10,7 +10,7 @@ deploy:
   api_key:
     secure: lOrR3DSymALxQEuoWpYJ6DkDLVCf3VZdY6htZTfRnH8qcmT83nY4tQM45ZlmaaD4rcLa7O4qdp49uSCxDBC4o/cVlgl3dT8Z7+1PvDEUsr9Ppk63CeIKwgWsh2UFznF/TdX74VqlhzWSM5XCNMlm1ppeDDkzMhXVbv1nBDSI+OI=
   file:
-    - "retext-keywords.js"
-    - "retext-keywords.min.js"
+    - 'retext-keywords.js'
+    - 'retext-keywords.min.js'
   on:
     tags: true
