@@ -1,15 +1,17 @@
 {
   "name": "retext-keywords",
   "version": "4.0.2",
-  "description": "Keyword extraction with Retext",
+  "description": "retext plugin to extract keywords",
   "license": "MIT",
   "keywords": [
+    "unified",
+    "retext",
+    "plugin",
     "keyword",
     "phrase",
     "terminology",
     "term",
-    "extraction",
-    "retext"
+    "extraction"
   ],
   "repository": "retextjs/retext-keywords",
   "bugs": "https://github.com/retextjs/retext-keywords/issues",
