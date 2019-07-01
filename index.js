@@ -3,17 +3,12 @@
 var stemmer = require('stemmer')
 var visit = require('unist-util-visit')
 var nlcstToString = require('nlcst-to-string')
-var pos = require('retext-pos')
 
 module.exports = keywords
 
 var own = {}.hasOwnProperty
 
 function keywords(options) {
-  this.use(pos).use(gatherKeywords, options)
-}
-
-function gatherKeywords(options) {
   var maximum = (options || {}).maximum || 5
 
   return transformer

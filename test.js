@@ -2,6 +2,7 @@
 
 var test = require('tape')
 var retext = require('retext')
+var pos = require('retext-pos')
 var keywords = require('.')
 
 // Fixture: First three paragraphs on Term Extraction from Wikipedia:
@@ -51,6 +52,7 @@ var phraseScores = [1, 0.55, 0.53, 0.24, 0.18]
 
 test('keywords()', function(t) {
   retext()
+    .use(pos)
     .use(keywords)
     .process(fixture, function(err, file) {
       t.ifErr(err, 'should not fail')

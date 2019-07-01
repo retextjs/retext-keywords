@@ -25,7 +25,6 @@
   ],
   "dependencies": {
     "nlcst-to-string": "^2.0.0",
-    "retext-pos": "^2.0.0",
     "stemmer": "^1.0.0",
     "unist-util-visit": "^1.0.0"
   },
@@ -36,6 +35,7 @@
     "remark-cli": "^6.0.0",
     "remark-preset-wooorm": "^5.0.0",
     "retext": "^7.0.0",
+    "retext-pos": "^2.0.0",
     "tape": "^4.0.0",
     "tinyify": "^2.0.0",
     "xo": "^0.24.0"
