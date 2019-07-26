@@ -8,6 +8,7 @@ var debounce = require('debounce')
 var vfile = require('vfile')
 var unified = require('unified')
 var english = require('retext-english')
+var pos = require('retext-pos')
 var keywords = require('retext-keywords')
 
 var darkQuery = '(prefers-color-scheme: dark)'
@@ -16,6 +17,7 @@ var ceil = Math.ceil
 
 var processor = unified()
   .use(english)
+  .use(pos)
   .use(keywords)
   .use(add)
 
