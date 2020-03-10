@@ -2,7 +2,7 @@
 
 var stemmer = require('stemmer')
 var visit = require('unist-util-visit')
-var nlcstToString = require('nlcst-to-string')
+var toString = require('nlcst-to-string')
 
 module.exports = keywords
 
@@ -35,7 +35,7 @@ function findPhraseInDirection(node, index, parent, offset) {
 
     if (child.type === 'WhiteSpaceNode') {
       queue.push(child)
-    } else if (isImportant(child)) {
+    } else if (important(child)) {
       nodes = nodes.concat(queue, [child])
       words.push(child)
       stems.push(stemNode(child))
@@ -45,14 +45,10 @@ function findPhraseInDirection(node, index, parent, offset) {
     }
   }
 
-  return {
-    stems: stems,
-    words: words,
-    nodes: nodes
-  }
+  return {stems: stems, words: words, nodes: nodes}
 }
 
-// Get the top important phrases in `self`.
+// Get the top important phrases.
 function getKeyphrases(results, maximum) {
   var stemmedPhrases = {}
   var initialWords = []
@@ -68,22 +64,19 @@ function getKeyphrases(results, maximum) {
   var first
   var match
 
-  // Iterate over all grouped important words...
+  // Iterate over all grouped important words…
   for (keyword in results) {
     matches = results[keyword].matches
     length = matches.length
     index = -1
 
-    // Iterate over every occurence of a certain keyword...
+    // Iterate over every occurence of a certain keyword…
     while (++index < length) {
       phrase = findPhrase(matches[index])
       stemmedPhrase = stemmedPhrases[phrase.value]
       first = phrase.nodes[0]
 
-      match = {
-        nodes: phrase.nodes,
-        parent: matches[index].parent
-      }
+      match = {nodes: phrase.nodes, parent: matches[index].parent}
 
       // If we've detected the same stemmed phrase somewhere.
       if (own.call(stemmedPhrases, phrase.value)) {
@@ -187,10 +180,7 @@ function filterResults(results, maximum) {
 
 // Merge a previous array, with a current value, and a following array.
 function merge(prev, current, next) {
-  return prev
-    .concat()
-    .reverse()
-    .concat([current], next)
+  return [].concat(prev.concat().reverse(), current, next)
 }
 
 // Find the phrase surrounding a node.
@@ -219,29 +209,22 @@ function getImportantWords(node) {
     var match
     var stem
 
-    if (isImportant(word)) {
+    if (important(word)) {
       stem = stemNode(word)
-      match = {
-        node: word,
-        index: index,
-        parent: parent
-      }
+      match = {node: word, index: index, parent: parent}
 
-      if (!own.call(words, stem)) {
-        words[stem] = {
-          matches: [match],
-          stem: stem,
-          score: 1
-        }
-      } else {
+      if (own.call(words, stem)) {
         words[stem].matches.push(match)
         words[stem].score++
+      } else {
+        words[stem] = {matches: [match], stem: stem, score: 1}
       }
     }
   }
 }
 
-// Clone the given map of words.  This is a two level-deep clone.
+// Clone the given map of words.
+// This is a two level-deep clone.
 function cloneMatches(words) {
   var result = {}
   var key
@@ -261,19 +244,18 @@ function cloneMatches(words) {
 }
 
 // Check if `node` is important.
-function isImportant(node) {
+function important(node) {
   return (
     node &&
     node.data &&
     node.data.partOfSpeech &&
     (node.data.partOfSpeech.indexOf('N') === 0 ||
-      (node.data.partOfSpeech === 'JJ' &&
-        isUpperCase(nlcstToString(node).charAt(0))))
+      (node.data.partOfSpeech === 'JJ' && uppercase(toString(node).charAt(0))))
   )
 }
 
 // Check if `value` is upper-case.
-function isUpperCase(value) {
+function uppercase(value) {
   return value === String(value).toUpperCase()
 }
 
@@ -284,5 +266,5 @@ function reverse(a, b) {
 
 // Get the stem of a node.
 function stemNode(node) {
-  return stemmer(nlcstToString(node)).toLowerCase()
+  return stemmer(toString(node)).toLowerCase()
 }

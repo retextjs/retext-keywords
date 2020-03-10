@@ -72,9 +72,8 @@
     "prettier": true,
     "esnext": false,
     "rules": {
-      "no-negated-condition": "off",
+      "unicorn/prefer-includes": "off",
       "guard-for-in": "off",
-      "max-lines": "off",
       "max-nested-callbacks": "off"
     },
     "ignores": [
