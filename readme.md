@@ -21,7 +21,7 @@ npm install retext-keywords
 ## Use
 
 Say we have the following file, `example.txt`, with the first four paragraphs
-on [Term Extraction][term-extraction] from Wikipedia:
+on [term Extraction][term-extraction] from Wikipedia:
 
 ```txt
 Terminology mining, term extraction, term recognition, or glossary extraction, is a subtask of information extraction. The goal of terminology extraction is to automatically extract relevant terms from a given corpus.
@@ -102,9 +102,9 @@ A single keyword looks as follows:
   score: 1,
   matches: [
     {node: Node, index: 5, parent: Node},
-    // ...
+    // …
   ],
-  // ...
+  // …
 }
 ```
 
@@ -118,7 +118,7 @@ A single keyword looks as follows:
   value: 'terminolog extract',
   matches:  [
     {nodes: [Node, Node, Node], parent: Node},
-    // ...
+    // …
   ]
 }
 ```
@@ -137,8 +137,8 @@ See [`contributing.md`][contributing] in [`retextjs/.github`][health] for ways
 to get started.
 See [`support.md`][support] for ways to get help.
 
-This project has a [Code of Conduct][coc].
-By interacting with this repository, organisation, or community you agree to
+This project has a [code of conduct][coc].
+By interacting with this repository, organization, or community you agree to
 abide by its terms.
 
 ## License
@@ -169,7 +169,7 @@ abide by its terms.
 
 [collective]: https://opencollective.com/unified
 
-[chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
+[chat-badge]: https://img.shields.io/badge/chat-spectrum-7b16ff.svg
 
 [chat]: https://spectrum.chat/unified/retext
 
