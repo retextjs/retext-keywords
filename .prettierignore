@@ -1,3 +1,5 @@
 coverage/
 retext-keywords.js
 retext-keywords.min.js
+*.json
+*.md

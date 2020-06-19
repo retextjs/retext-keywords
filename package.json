@@ -36,17 +36,17 @@
   "devDependencies": {
     "browserify": "^16.0.0",
     "nyc": "^15.0.0",
-    "prettier": "^1.0.0",
-    "remark-cli": "^7.0.0",
-    "remark-preset-wooorm": "^6.0.0",
+    "prettier": "^2.0.0",
+    "remark-cli": "^8.0.0",
+    "remark-preset-wooorm": "^7.0.0",
     "retext": "^7.0.0",
     "retext-pos": "^3.0.0",
-    "tape": "^4.0.0",
+    "tape": "^5.0.0",
     "tinyify": "^2.0.0",
-    "xo": "^0.27.0"
+    "xo": "^0.32.0"
   },
   "scripts": {
-    "format": "remark . -qfo && prettier --write \"**/*.js\" && xo --fix",
+    "format": "remark . -qfo && prettier . --write && xo --fix",
     "build-bundle": "browserify . -s retextKeywords > retext-keywords.js",
     "build-mangle": "browserify . -s retextKeywords -p tinyify > retext-keywords.min.js",
     "build": "npm run build-bundle && npm run build-mangle",

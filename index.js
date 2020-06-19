@@ -179,21 +179,21 @@ function filterResults(results, maximum) {
 }
 
 // Merge a previous array, with a current value, and a following array.
-function merge(prev, current, next) {
-  return [].concat(prev.concat().reverse(), current, next)
+function merge(previous, current, next) {
+  return [].concat(previous.concat().reverse(), current, next)
 }
 
 // Find the phrase surrounding a node.
 function findPhrase(match) {
   var node = match.node
-  var prev = findPhraseInDirection(node, match.index, match.parent, -1)
+  var previous = findPhraseInDirection(node, match.index, match.parent, -1)
   var next = findPhraseInDirection(node, match.index, match.parent, 1)
-  var stems = merge(prev.stems, stemNode(node), next.stems)
+  var stems = merge(previous.stems, stemNode(node), next.stems)
 
   return {
     stems: stems,
     value: stems.join(' '),
-    nodes: merge(prev.nodes, node, next.nodes)
+    nodes: merge(previous.nodes, node, next.nodes)
   }
 }
 
