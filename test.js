@@ -54,8 +54,8 @@ test('keywords()', function (t) {
   retext()
     .use(pos)
     .use(keywords)
-    .process(fixture, function (err, file) {
-      t.ifErr(err, 'should not fail')
+    .process(fixture, function (error, file) {
+      t.ifErr(error, 'should not fail')
 
       t.test('should work', function (st) {
         st.ok('keywords' in file.data)
