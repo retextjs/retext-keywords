@@ -32,9 +32,9 @@
     "index.js"
   ],
   "dependencies": {
-    "nlcst-to-string": "^2.0.0",
-    "stemmer": "^1.0.0",
-    "unist-util-visit": "^2.0.0"
+    "nlcst-to-string": "^3.0.0",
+    "stemmer": "^2.0.0",
+    "unist-util-visit": "^3.0.0"
   },
   "devDependencies": {
     "c8": "^7.0.0",

@@ -1,6 +1,6 @@
-import stemmer from 'stemmer'
-import visit from 'unist-util-visit'
-import toString from 'nlcst-to-string'
+import {stemmer} from 'stemmer'
+import {visit} from 'unist-util-visit'
+import {toString} from 'nlcst-to-string'
 
 var own = {}.hasOwnProperty
 
