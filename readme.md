@@ -12,6 +12,9 @@
 
 ## Install
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
 [npm][]:
 
 ```sh
@@ -36,34 +39,30 @@ Typically, approaches to automatic term extraction make use of linguistic proces
 …and our script, `example.js`, looks as follows:
 
 ```js
-var vfile = require('to-vfile')
-var retext = require('retext')
-var pos = require('retext-pos')
-var keywords = require('retext-keywords')
-var toString = require('nlcst-to-string')
+import {readSync} from 'to-vfile'
+import {toString} from 'nlcst-to-string'
+import {retext} from 'retext'
+import retextPos from 'retext-pos'
+import retextKeywords from 'retext-keywords'
+
+const file = readSync('example.txt')
 
 retext()
-  .use(pos) // Make sure to use `retext-pos` before `retext-keywords`.
-  .use(keywords)
-  .process(vfile.readSync('example.txt'), done)
+  .use(retextPos) // Make sure to use `retext-pos` before `retext-keywords`.
+  .use(retextKeywords)
+  .process(file)
+  .then((file) => {
+    console.log('Keywords:')
+    file.data.keywords.forEach((keyword) => {
+      console.log(toString(keyword.matches[0].node))
+    })
 
-function done(err, file) {
-  if (err) throw err
-
-  console.log('Keywords:')
-  file.data.keywords.forEach(function(keyword) {
-    console.log(toString(keyword.matches[0].node))
+    console.log()
+    console.log('Key-phrases:')
+    file.data.keyphrases.forEach((phrase) => {
+      console.log(phrase.matches[0].nodes.map((d) => toString(d)).join(''))
+    })
   })
-
-  console.log()
-  console.log('Key-phrases:')
-  file.data.keyphrases.forEach(function(phrase) {
-    console.log(phrase.matches[0].nodes.map(stringify).join(''))
-    function stringify(value) {
-      return toString(value)
-    }
-  })
-}
 ```
 
 Now, running `node example` yields:
@@ -86,7 +85,10 @@ communities
 
 ## API
 
-### `retext().use(keywords[, options])`
+This package exports no identifiers.
+The default export is `retextKeywords`.
+
+### `unified().use(retextKeywords[, options])`
 
 Extract keywords and key-phrases from the document.
 
