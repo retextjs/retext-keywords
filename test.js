@@ -8,7 +8,7 @@ import retextKeywords from './index.js'
 //
 // There’s also some `constructor`s sprinkled throughout the document to check
 // if prototypal properties work correctly.
-var fixture =
+const fixture =
   'Terminology mining, term extraction, term recognition, or ' +
   'glossary extraction, is a subtask of information extraction. ' +
   'The goal of terminology extraction is to automatically extract ' +
@@ -45,105 +45,75 @@ var fixture =
   'semantic similarity, knowledge management, human translation ' +
   'and machine translation, etc. constructor.'
 
-var keyScores = [1, 1, 0.71, 0.71, 0.57, 0.57]
-var phraseScores = [1, 0.55, 0.53, 0.24, 0.18]
+test('retext-keywords', (t) => {
+  t.plan(17)
 
-test('retext-keywords', function (t) {
   retext()
     .use(retextPos)
     .use(retextKeywords)
-    .process(fixture, function (error, file) {
-      t.ifErr(error, 'should not fail')
+    .process(fixture)
+    .then((file) => {
+      t.ok('keywords' in file.data, 'keywords')
+      t.ok('keyphrases' in file.data, 'keyphrases')
+      t.equal(file.data.keywords.length, 6, 'keywords')
+      t.equal(file.data.keyphrases.length, 5, 'keyphrases')
 
-      t.test('should work', function (st) {
-        st.ok('keywords' in file.data)
-        st.assert('keyphrases' in file.data)
+      t.deepEqual(
+        file.data.keywords.map((d) => Math.round(d.score * 1e2) / 1e2),
+        [1, 1, 0.71, 0.71, 0.57, 0.57],
+        'keywords[n].score'
+      )
+      t.ok(
+        file.data.keywords.every((d) => 'stem' in d),
+        'keywords[n].stem'
+      )
+      t.ok(
+        file.data.keywords.every((d) => 'matches' in d),
+        'keywords[n].matches'
+      )
+      t.ok(
+        file.data.keywords.every((d) => d.matches.every((d) => 'node' in d)),
+        'keywords[n].matches[n].node'
+      )
+      t.ok(
+        file.data.keywords.every((d) => d.matches.every((d) => 'parent' in d)),
+        'keywords[n].matches[n].parent'
+      )
+      t.ok(
+        file.data.keywords.every((d) => d.matches.every((d) => 'index' in d)),
+        'keywords[n].matches[n].index'
+      )
 
-        st.equal(file.data.keywords.length, 6)
-        st.equal(file.data.keyphrases.length, 5)
-
-        st.end()
-      })
-
-      t.test('should have scores', function (st) {
-        file.data.keywords.forEach(function (keyword, n) {
-          st.equal(Math.round(keyword.score * 1e2) / 1e2, keyScores[n])
-        })
-
-        file.data.keyphrases.forEach(function (phrase, n) {
-          st.equal(Math.round(phrase.score * 1e2) / 1e2, phraseScores[n])
-        })
-
-        st.end()
-      })
-
-      t.test('should have stems', function (st) {
-        file.data.keywords.forEach(function (keyword) {
-          st.ok('stem' in keyword)
-        })
-
-        file.data.keyphrases.forEach(function (phrase) {
-          st.ok('stems' in phrase)
-        })
-
-        st.end()
-      })
-
-      t.test('should have matches', function (st) {
-        file.data.keywords.forEach(function (keyword) {
-          st.ok('matches' in keyword)
-        })
-
-        file.data.keyphrases.forEach(function (phrase) {
-          st.ok('matches' in phrase)
-        })
-
-        st.end()
-      })
-
-      t.test('keywords[n].matches[n]', function (st) {
-        file.data.keywords.forEach(function (keyword) {
-          keyword.matches.forEach(function (match) {
-            st.assert('node' in match)
-            st.assert('parent' in match)
-            st.assert('index' in match)
-          })
-        })
-
-        st.end()
-      })
-
-      t.test('keyphrases', function (st) {
-        st.test('should have a weight', function (sst) {
-          file.data.keyphrases.forEach(function (phrase) {
-            sst.ok('weight' in phrase)
-          })
-
-          sst.end()
-        })
-
-        st.test('should have a value', function (sst) {
-          file.data.keyphrases.forEach(function (phrase) {
-            sst.ok('value' in phrase)
-          })
-
-          sst.end()
-        })
-
-        st.end()
-      })
-
-      t.test('keyphrases[n].matches[n]', function (st) {
-        file.data.keyphrases.forEach(function (phrase) {
-          phrase.matches.forEach(function (match) {
-            st.ok('nodes' in match)
-            st.ok('parent' in match)
-          })
-        })
-
-        st.end()
-      })
-
-      t.end()
-    })
+      t.deepEqual(
+        file.data.keyphrases.map((d) => Math.round(d.score * 1e2) / 1e2),
+        [1, 0.55, 0.53, 0.24, 0.18],
+        'keyphrases[n].score'
+      )
+      t.ok(
+        file.data.keyphrases.every((d) => 'weight' in d),
+        'keyphrases[n].weight'
+      )
+      t.ok(
+        file.data.keyphrases.every((d) => 'value' in d),
+        'keyphrases[n].value'
+      )
+      t.ok(
+        file.data.keyphrases.every((d) => 'stems' in d),
+        'keyphrases[n].stems'
+      )
+      t.ok(
+        file.data.keyphrases.every((d) => 'matches' in d),
+        'keyphrases[n].matches'
+      )
+      t.ok(
+        file.data.keyphrases.every((d) => d.matches.every((d) => 'nodes' in d)),
+        'keyphrases[n].matches[n].nodes'
+      )
+      t.ok(
+        file.data.keyphrases.every((d) =>
+          d.matches.every((d) => 'parent' in d)
+        ),
+        'keyphrases[n].matches[n].parent'
+      )
+    }, t.ifErr)
 })
