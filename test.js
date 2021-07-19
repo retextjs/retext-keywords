@@ -1,7 +1,7 @@
 import test from 'tape'
-import retext from 'retext'
-import pos from 'retext-pos'
-import keywords from './index.js'
+import {retext} from 'retext'
+import retextPos from 'retext-pos'
+import retextKeywords from './index.js'
 
 // Fixture: First three paragraphs on Term Extraction from Wikipedia:
 // https://en.wikipedia.org/wiki/Terminology_extraction.
@@ -48,10 +48,10 @@ var fixture =
 var keyScores = [1, 1, 0.71, 0.71, 0.57, 0.57]
 var phraseScores = [1, 0.55, 0.53, 0.24, 0.18]
 
-test('keywords()', function (t) {
+test('retext-keywords', function (t) {
   retext()
-    .use(pos)
-    .use(keywords)
+    .use(retextPos)
+    .use(retextKeywords)
     .process(fixture, function (error, file) {
       t.ifErr(error, 'should not fail')
 
