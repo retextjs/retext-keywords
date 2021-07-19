@@ -1,9 +1,50 @@
+/**
+ * @typedef {import('unist').Parent} Parent
+ * @typedef {import('unist').Node} Node
+ *
+ * @typedef Options
+ *   Configuration.
+ * @property {number} [maximum=5]
+ *   Try to detect at most `maximum` `words` and `phrases`.
+ *
+ *   Note that actual counts may differ.
+ *   For example, when two words have the same score, both will be returned.
+ *   Or when too few words exist, less will be returned. the same goes for
+ *   phrases.
+ *
+ * @typedef Keyphrase
+ * @property {number} score
+ * @property {number} weight
+ * @property {string[]} stems
+ * @property {string} value
+ * @property {PhraseMatch[]} matches
+ *
+ * @typedef Keyword
+ * @property {KeywordMatch[]} matches
+ * @property {number} score
+ * @property {string} stem
+ *
+ * @typedef PhraseMatch
+ * @property {Node[]} nodes
+ * @property {Parent} parent
+ *
+ * @typedef KeywordMatch
+ * @property {Node} node
+ * @property {number} index
+ * @property {Parent} parent
+ */
+
 import {stemmer} from 'stemmer'
 import {visit} from 'unist-util-visit'
 import {toString} from 'nlcst-to-string'
 
 const own = {}.hasOwnProperty
 
+/**
+ * Plugin to extract keywords and key-phrases.
+ *
+ * @type {import('unified').Plugin<[Options?]>}
+ */
 export default function retextKeywords(options = {}) {
   const maximum = options.maximum || 5
 
@@ -14,12 +55,20 @@ export default function retextKeywords(options = {}) {
   }
 }
 
-// Get following or preceding important words or white space.
-function findPhraseInDirection(node, index, parent, offset) {
+/**
+ * Get following or preceding important words or white space.
+ *
+ * @param {Parent} parent
+ * @param {number} index
+ * @param {number} offset
+ */
+function findPhraseInDirection(parent, index, offset) {
   const children = parent.children
+  /** @type {Node[]} */
   const nodes = []
+  /** @type {string[]} */
   const stems = []
-  const words = []
+  /** @type {Node[]} */
   const queue = []
 
   while (children[(index += offset)]) {
@@ -29,7 +78,6 @@ function findPhraseInDirection(node, index, parent, offset) {
       queue.push(child)
     } else if (important(child)) {
       nodes.push(...queue, child)
-      words.push(child)
       stems.push(stemNode(child))
       queue.length = 0
     } else {
@@ -37,13 +85,21 @@ function findPhraseInDirection(node, index, parent, offset) {
     }
   }
 
-  return {stems, words, nodes}
+  return {stems, nodes}
 }
 
-// Get the top important phrases.
+/**
+ * Get the top important phrases.
+ *
+ * @param {Record<string, Keyword>} results
+ * @param {number} maximum
+ */
 function getKeyphrases(results, maximum) {
+  /** @type {Record<string, Keyphrase>} */
   const stemmedPhrases = {}
+  /** @type {Node[]} */
   const initialWords = []
+  /** @type {string} */
   let keyword
 
   // Iterate over all grouped important words…
@@ -95,6 +151,7 @@ function getKeyphrases(results, maximum) {
     }
   }
 
+  /** @type {string} */
   let stemmedPhrase
 
   for (stemmedPhrase in stemmedPhrases) {
@@ -113,18 +170,29 @@ function getKeyphrases(results, maximum) {
   return filterResults(stemmedPhrases, maximum)
 }
 
-// Get the top results from an occurance map.
+/**
+ * Get the top results from an occurance map.
+ *
+ * @template {{score: number}} T
+ * @param {Record<string, T>} results
+ * @param {number} maximum
+ * @returns {T[]}
+ */
 function filterResults(results, maximum) {
+  /** @type {T[]} */
   const filteredResults = []
+  /** @type {number[]} */
   const indices = []
+  /** @type {Record<number, T[]>} */
   const matrix = {}
+  /** @type {string} */
   let key
 
   for (key in results) {
     if (own.call(results, key)) {
       const score = results[key].score
 
-      if (!matrix[score]) {
+      if (!own.call(matrix, String(score))) {
         matrix[score] = []
         indices.push(score)
       }
@@ -159,20 +227,14 @@ function filterResults(results, maximum) {
   return filteredResults
 }
 
-// Merge a previous array, with a current value, and a following array.
-function merge(previous, current, next) {
-  return [].concat(previous.concat().reverse(), current, next)
-}
-
-// Find the phrase surrounding a node.
+/**
+ * Find the phrase surrounding a node.
+ *
+ * @param {KeywordMatch} match
+ */
 function findPhrase(match) {
-  const previous = findPhraseInDirection(
-    match.node,
-    match.index,
-    match.parent,
-    -1
-  )
-  const next = findPhraseInDirection(match.node, match.index, match.parent, 1)
+  const previous = findPhraseInDirection(match.parent, match.index, -1)
+  const next = findPhraseInDirection(match.parent, match.index, 1)
   const stems = merge(previous.stems, stemNode(match.node), next.stems)
 
   return {
@@ -182,12 +244,30 @@ function findPhrase(match) {
   }
 }
 
-// Get most important words in `node`.
+/**
+ * Merge a previous array, with a current value, and a following array.
+ *
+ * @template T
+ * @param {T[]} previous
+ * @param {T} current
+ * @param {T[]} next
+ * @returns {T[]}
+ */
+function merge(previous, current, next) {
+  return [...[...previous].reverse(), current, ...next]
+}
+
+/**
+ * Get most important words in `node`.
+ *
+ * @param {Node} node
+ */
 function getImportantWords(node) {
+  /** @type {Record<string, Keyword>} */
   const words = {}
 
   visit(node, 'WordNode', (word, index, parent) => {
-    if (important(word)) {
+    if (parent && index !== null && important(word)) {
       const stem = stemNode(word)
       const match = {node: word, index, parent}
 
@@ -203,10 +283,17 @@ function getImportantWords(node) {
   return words
 }
 
-// Clone the given map of words.
-// This is a two level-deep clone.
+/**
+ * Clone the given map of words.
+ * This is a two level-deep clone.
+ *
+ * @param {Record<string, Keyword>} words
+ * @returns {Record<string, Keyword>}
+ */
 function cloneMatches(words) {
+  /** @type {Record<string, Keyword>} */
   const result = {}
+  /** @type {string} */
   let key
 
   for (key in words) {
@@ -219,23 +306,39 @@ function cloneMatches(words) {
   return result
 }
 
-// Check if `node` is important.
+/**
+ * Check if `node` is important.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
 function important(node) {
-  return (
+  return Boolean(
     node &&
-    node.data &&
-    node.data.partOfSpeech &&
-    (node.data.partOfSpeech.indexOf('N') === 0 ||
-      (node.data.partOfSpeech === 'JJ' && uppercase(toString(node).charAt(0))))
+      node.data &&
+      typeof node.data.partOfSpeech === 'string' &&
+      (node.data.partOfSpeech.indexOf('N') === 0 ||
+        (node.data.partOfSpeech === 'JJ' &&
+          uppercase(toString(node).charAt(0))))
   )
 }
 
-// Check if `value` is upper-case.
+/**
+ * Check if `value` is upper-case.
+ *
+ * @param {string} value
+ * @returns {boolean}
+ */
 function uppercase(value) {
   return value === String(value).toUpperCase()
 }
 
-// Get the stem of a node.
+/**
+ * Get the stem of a node.
+ *
+ * @param {Node} node
+ * @returns {string}
+ */
 function stemNode(node) {
   return stemmer(toString(node)).toLowerCase()
 }

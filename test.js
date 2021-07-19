@@ -1,5 +1,12 @@
+/**
+ * @typedef {import('vfile').VFile} VFile
+ * @typedef {import('./index.js').Keyphrase} Keyphrase
+ * @typedef {import('./index.js').Keyword} Keyword
+ */
+
 import test from 'tape'
 import {retext} from 'retext'
+// @ts-expect-error: To type.
 import retextPos from 'retext-pos'
 import retextKeywords from './index.js'
 
@@ -46,74 +53,83 @@ const fixture =
   'and machine translation, etc. constructor.'
 
 test('retext-keywords', (t) => {
-  t.plan(17)
+  t.plan(15)
 
   retext()
     .use(retextPos)
     .use(retextKeywords)
     .process(fixture)
-    .then((file) => {
-      t.ok('keywords' in file.data, 'keywords')
-      t.ok('keyphrases' in file.data, 'keyphrases')
-      t.equal(file.data.keywords.length, 6, 'keywords')
-      t.equal(file.data.keyphrases.length, 5, 'keyphrases')
+    .then(
+      /**
+       * @param {VFile & {data: {keywords: Keyword[], keyphrases: Keyphrase[]}}} file
+       */
+      // @ts-expect-error: hush.
+      (file) => {
+        t.ok(Array.isArray(file.data.keywords), 'keywords')
+        t.ok(Array.isArray(file.data.keyphrases), 'keywords')
 
-      t.deepEqual(
-        file.data.keywords.map((d) => Math.round(d.score * 1e2) / 1e2),
-        [1, 1, 0.71, 0.71, 0.57, 0.57],
-        'keywords[n].score'
-      )
-      t.ok(
-        file.data.keywords.every((d) => 'stem' in d),
-        'keywords[n].stem'
-      )
-      t.ok(
-        file.data.keywords.every((d) => 'matches' in d),
-        'keywords[n].matches'
-      )
-      t.ok(
-        file.data.keywords.every((d) => d.matches.every((d) => 'node' in d)),
-        'keywords[n].matches[n].node'
-      )
-      t.ok(
-        file.data.keywords.every((d) => d.matches.every((d) => 'parent' in d)),
-        'keywords[n].matches[n].parent'
-      )
-      t.ok(
-        file.data.keywords.every((d) => d.matches.every((d) => 'index' in d)),
-        'keywords[n].matches[n].index'
-      )
+        t.deepEqual(
+          file.data.keywords.map((d) => Math.round(d.score * 1e2) / 1e2),
+          [1, 1, 0.71, 0.71, 0.57, 0.57],
+          'keywords[n].score'
+        )
+        t.ok(
+          file.data.keywords.every((d) => 'stem' in d),
+          'keywords[n].stem'
+        )
+        t.ok(
+          file.data.keywords.every((d) => 'matches' in d),
+          'keywords[n].matches'
+        )
+        t.ok(
+          file.data.keywords.every((d) => d.matches.every((d) => 'node' in d)),
+          'keywords[n].matches[n].node'
+        )
+        t.ok(
+          file.data.keywords.every((d) =>
+            d.matches.every((d) => 'parent' in d)
+          ),
+          'keywords[n].matches[n].parent'
+        )
+        t.ok(
+          file.data.keywords.every((d) => d.matches.every((d) => 'index' in d)),
+          'keywords[n].matches[n].index'
+        )
 
-      t.deepEqual(
-        file.data.keyphrases.map((d) => Math.round(d.score * 1e2) / 1e2),
-        [1, 0.55, 0.53, 0.24, 0.18],
-        'keyphrases[n].score'
-      )
-      t.ok(
-        file.data.keyphrases.every((d) => 'weight' in d),
-        'keyphrases[n].weight'
-      )
-      t.ok(
-        file.data.keyphrases.every((d) => 'value' in d),
-        'keyphrases[n].value'
-      )
-      t.ok(
-        file.data.keyphrases.every((d) => 'stems' in d),
-        'keyphrases[n].stems'
-      )
-      t.ok(
-        file.data.keyphrases.every((d) => 'matches' in d),
-        'keyphrases[n].matches'
-      )
-      t.ok(
-        file.data.keyphrases.every((d) => d.matches.every((d) => 'nodes' in d)),
-        'keyphrases[n].matches[n].nodes'
-      )
-      t.ok(
-        file.data.keyphrases.every((d) =>
-          d.matches.every((d) => 'parent' in d)
-        ),
-        'keyphrases[n].matches[n].parent'
-      )
-    }, t.ifErr)
+        t.deepEqual(
+          file.data.keyphrases.map((d) => Math.round(d.score * 1e2) / 1e2),
+          [1, 0.55, 0.53, 0.24, 0.18],
+          'keyphrases[n].score'
+        )
+        t.ok(
+          file.data.keyphrases.every((d) => 'weight' in d),
+          'keyphrases[n].weight'
+        )
+        t.ok(
+          file.data.keyphrases.every((d) => 'value' in d),
+          'keyphrases[n].value'
+        )
+        t.ok(
+          file.data.keyphrases.every((d) => 'stems' in d),
+          'keyphrases[n].stems'
+        )
+        t.ok(
+          file.data.keyphrases.every((d) => 'matches' in d),
+          'keyphrases[n].matches'
+        )
+        t.ok(
+          file.data.keyphrases.every((d) =>
+            d.matches.every((d) => 'nodes' in d)
+          ),
+          'keyphrases[n].matches[n].nodes'
+        )
+        t.ok(
+          file.data.keyphrases.every((d) =>
+            d.matches.every((d) => 'parent' in d)
+          ),
+          'keyphrases[n].matches[n].parent'
+        )
+      },
+      t.ifErr
+    )
 })
