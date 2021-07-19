@@ -25,6 +25,9 @@
     "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
     "Vladimir Starkov <iamstarkov@gmail.com>"
   ],
+  "sideEffects": false,
+  "type": "module",
+  "main": "index.js",
   "files": [
     "index.js"
   ],
@@ -41,7 +44,7 @@
     "retext": "^7.0.0",
     "retext-pos": "^3.0.0",
     "tape": "^5.0.0",
-    "xo": "^0.37.0"
+    "xo": "^0.39.0"
   },
   "scripts": {
     "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
@@ -59,8 +62,10 @@
   },
   "xo": {
     "prettier": true,
-    "esnext": false,
     "rules": {
+      "unicorn/no-array-for-each": "off",
+      "no-var": "off",
+      "prefer-arrow-callback": "off",
       "unicorn/prefer-includes": "off",
       "guard-for-in": "off",
       "max-nested-callbacks": "off"

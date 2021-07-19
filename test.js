@@ -1,9 +1,7 @@
-'use strict'
-
-var test = require('tape')
-var retext = require('retext')
-var pos = require('retext-pos')
-var keywords = require('.')
+import test from 'tape'
+import retext from 'retext'
+import pos from 'retext-pos'
+import keywords from './index.js'
 
 // Fixture: First three paragraphs on Term Extraction from Wikipedia:
 // https://en.wikipedia.org/wiki/Terminology_extraction.

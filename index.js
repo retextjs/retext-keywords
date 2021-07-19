@@ -1,14 +1,10 @@
-'use strict'
-
-var stemmer = require('stemmer')
-var visit = require('unist-util-visit')
-var toString = require('nlcst-to-string')
-
-module.exports = keywords
+import stemmer from 'stemmer'
+import visit from 'unist-util-visit'
+import toString from 'nlcst-to-string'
 
 var own = {}.hasOwnProperty
 
-function keywords(options) {
+export default function retextKeywords(options) {
   var maximum = (options || {}).maximum || 5
 
   return transformer
@@ -45,7 +41,7 @@ function findPhraseInDirection(node, index, parent, offset) {
     }
   }
 
-  return {stems: stems, words: words, nodes: nodes}
+  return {stems, words, nodes}
 }
 
 // Get the top important phrases.
@@ -103,9 +99,9 @@ function getKeyphrases(results, maximum) {
         }
 
         stemmedPhrases[phrase.value] = {
-          score: score,
+          score,
           weight: score,
-          stems: stems,
+          stems,
           value: phrase.value,
           matches: [match]
         }
@@ -191,7 +187,7 @@ function findPhrase(match) {
   var stems = merge(previous.stems, stemNode(node), next.stems)
 
   return {
-    stems: stems,
+    stems,
     value: stems.join(' '),
     nodes: merge(previous.nodes, node, next.nodes)
   }
@@ -211,13 +207,13 @@ function getImportantWords(node) {
 
     if (important(word)) {
       stem = stemNode(word)
-      match = {node: word, index: index, parent: parent}
+      match = {node: word, index, parent}
 
       if (own.call(words, stem)) {
         words[stem].matches.push(match)
         words[stem].score++
       } else {
-        words[stem] = {matches: [match], stem: stem, score: 1}
+        words[stem] = {matches: [match], stem, score: 1}
       }
     }
   }
