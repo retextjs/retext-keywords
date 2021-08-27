@@ -6,7 +6,6 @@
 
 import test from 'tape'
 import {retext} from 'retext'
-// @ts-expect-error: To type.
 import retextPos from 'retext-pos'
 import retextKeywords from './index.js'
 

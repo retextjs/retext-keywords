@@ -34,6 +34,7 @@
     "index.js"
   ],
   "dependencies": {
+    "@types/nlcst": "^1.0.0",
     "nlcst-to-string": "^3.0.0",
     "stemmer": "^2.0.0",
     "unified": "^10.0.0",

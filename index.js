@@ -1,6 +1,8 @@
 /**
- * @typedef {import('unist').Parent} Parent
- * @typedef {import('unist').Node} Node
+ * @typedef {import('nlcst').Root} Root
+ * @typedef {import('nlcst').Sentence} Sentence
+ * @typedef {import('nlcst').Word} Word
+ * @typedef {import('nlcst').SentenceContent} SentenceContent
  *
  * @typedef Options
  *   Configuration.
@@ -25,13 +27,13 @@
  * @property {string} stem
  *
  * @typedef PhraseMatch
- * @property {Node[]} nodes
- * @property {Parent} parent
+ * @property {SentenceContent[]} nodes
+ * @property {Sentence} parent
  *
  * @typedef KeywordMatch
- * @property {Node} node
+ * @property {Word} node
  * @property {number} index
- * @property {Parent} parent
+ * @property {Sentence} parent
  */
 
 import {stemmer} from 'stemmer'
@@ -43,7 +45,7 @@ const own = {}.hasOwnProperty
 /**
  * Plugin to extract keywords and key-phrases.
  *
- * @type {import('unified').Plugin<[Options?]>}
+ * @type {import('unified').Plugin<[Options?]|[], Root>}
  */
 export default function retextKeywords(options = {}) {
   const maximum = options.maximum || 5
@@ -58,17 +60,17 @@ export default function retextKeywords(options = {}) {
 /**
  * Get following or preceding important words or white space.
  *
- * @param {Parent} parent
+ * @param {Sentence} parent
  * @param {number} index
  * @param {number} offset
  */
 function findPhraseInDirection(parent, index, offset) {
   const children = parent.children
-  /** @type {Node[]} */
+  /** @type {SentenceContent[]} */
   const nodes = []
   /** @type {string[]} */
   const stems = []
-  /** @type {Node[]} */
+  /** @type {SentenceContent[]} */
   const queue = []
 
   while (children[(index += offset)]) {
@@ -97,7 +99,7 @@ function findPhraseInDirection(parent, index, offset) {
 function getKeyphrases(results, maximum) {
   /** @type {Record<string, Keyphrase>} */
   const stemmedPhrases = {}
-  /** @type {Node[]} */
+  /** @type {Word[]} */
   const initialWords = []
   /** @type {string} */
   let keyword
@@ -112,7 +114,7 @@ function getKeyphrases(results, maximum) {
       while (++index < matches.length) {
         const phrase = findPhrase(matches[index])
         const stemmedPhrase = stemmedPhrases[phrase.value]
-        const first = phrase.nodes[0]
+        const first = /** @type {Word} */ (phrase.nodes[0])
         const match = {nodes: phrase.nodes, parent: matches[index].parent}
 
         // If we've detected the same stemmed phrase somewhere.
@@ -260,13 +262,14 @@ function merge(previous, current, next) {
 /**
  * Get most important words in `node`.
  *
- * @param {Node} node
+ * @param {Root} node
  */
 function getImportantWords(node) {
   /** @type {Record<string, Keyword>} */
   const words = {}
 
-  visit(node, 'WordNode', (word, index, parent) => {
+  visit(node, 'WordNode', (word, index, parent_) => {
+    const parent = /** @type {Sentence} */ (parent_)
     if (parent && index !== null && important(word)) {
       const stem = stemNode(word)
       const match = {node: word, index, parent}
@@ -309,7 +312,7 @@ function cloneMatches(words) {
 /**
  * Check if `node` is important.
  *
- * @param {Node} node
+ * @param {SentenceContent} node
  * @returns {boolean}
  */
 function important(node) {
@@ -336,7 +339,7 @@ function uppercase(value) {
 /**
  * Get the stem of a node.
  *
- * @param {Node} node
+ * @param {SentenceContent} node
  * @returns {string}
  */
 function stemNode(node) {
