@@ -8,23 +8,59 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-[**retext**][retext] plugin to extract keywords and key-phrases.
+**[retext][]** plugin to extract keywords and key phrases.
+
+## Contents
+
+*   [What is this?](#what-is-this)
+*   [When should I use this?](#when-should-i-use-this)
+*   [Install](#install)
+*   [Use](#use)
+*   [API](#api)
+    *   [`unified().use(retextKeywords[, options])`](#unifieduseretextkeywords-options)
+*   [Types](#types)
+*   [Compatibility](#compatibility)
+*   [Contribute](#contribute)
+*   [License](#license)
+
+## What is this?
+
+This package is a [unified][] ([retext][]) plugin to extract keywords and key
+phrases from a document, and exposes that metadata on the [file][vfile].
+
+## When should I use this?
+
+You can use this plugin any time you’re dealing with unified or retext already,
+and are interested in keywords and key phrases.
+Importantly, keywords extraction in NLP is a rather heavy and sometimes fragile
+process, so you might be better off manually providing a list of keywords.
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
-Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
-
-[npm][]:
+This package is [ESM only][esm].
+In Node.js (version 12.20+, 14.14+, 16.0+, or 18.0+), install with [npm][]:
 
 ```sh
 npm install retext-keywords
 ```
 
+In Deno with [`esm.sh`][esmsh]:
+
+```js
+import retextKeywords from 'https://esm.sh/retext-keywords@7'
+```
+
+In browsers with [`esm.sh`][esmsh]:
+
+```html
+<script type="module">
+  import retextKeywords from 'https://esm.sh/retext-keywords@7?bundle'
+</script>
+```
+
 ## Use
 
-Say we have the following file, `example.txt`, with the first four paragraphs
-on [term Extraction][term-extraction] from Wikipedia:
+Say our document `example.txt` contains (from [Wikipedia][term-extraction]):
 
 ```txt
 Terminology mining, term extraction, term recognition, or glossary extraction, is a subtask of information extraction. The goal of terminology extraction is to automatically extract relevant terms from a given corpus.
@@ -36,36 +72,33 @@ One of the first steps to model the knowledge domain of a virtual community is t
 Typically, approaches to automatic term extraction make use of linguistic processors (part of speech tagging, phrase chunking) to extract terminological candidates, i.e. syntactically plausible terminological noun phrases, NPs (e.g. compounds "credit card", adjective-NPs "local tourist information office", and prepositional-NPs "board of directors" - in English, the first two constructs are the most frequent). Terminological entries are then filtered from the candidate list using statistical and machine learning methods. Once filtered, because of their low ambiguity and high specificity, these terms are particularly useful for conceptualizing a knowledge domain or for supporting the creation of a domain ontology. Furthermore, terminology extraction is a very useful starting point for semantic similarity, knowledge management, human translation and machine translation, etc.
 ```
 
-…and our script, `example.js`, looks as follows:
+…and our module `example.js` looks as follows:
 
 ```js
-import {readSync} from 'to-vfile'
+import {read} from 'to-vfile'
 import {toString} from 'nlcst-to-string'
 import {retext} from 'retext'
 import retextPos from 'retext-pos'
 import retextKeywords from 'retext-keywords'
 
-const file = readSync('example.txt')
-
-retext()
+const file = retext()
   .use(retextPos) // Make sure to use `retext-pos` before `retext-keywords`.
   .use(retextKeywords)
-  .process(file)
-  .then((file) => {
-    console.log('Keywords:')
-    file.data.keywords.forEach((keyword) => {
-      console.log(toString(keyword.matches[0].node))
-    })
+  .process(await read('example.txt'))
 
-    console.log()
-    console.log('Key-phrases:')
-    file.data.keyphrases.forEach((phrase) => {
-      console.log(phrase.matches[0].nodes.map((d) => toString(d)).join(''))
-    })
-  })
+console.log('Keywords:')
+file.data.keywords.forEach((keyword) => {
+  console.log(toString(keyword.matches[0].node))
+})
+
+console.log()
+console.log('Key-phrases:')
+file.data.keyphrases.forEach((phrase) => {
+  console.log(phrase.matches[0].nodes.map((d) => toString(d)).join(''))
+})
 ```
 
-Now, running `node example` yields:
+…now running `node example.js` yields:
 
 ```txt
 Keywords:
@@ -90,10 +123,9 @@ The default export is `retextKeywords`.
 
 ### `unified().use(retextKeywords[, options])`
 
-Extract keywords and key-phrases from the document.
+Extract keywords and key phrases.
 
-The results are stored on `file.data`: keywords at `file.data.keywords` and
-key-phrases at `file.data.keyphrases`.
+The results are stored on `file.data.{keywords,keyphrases}`.
 Both are lists.
 
 A single keyword looks as follows:
@@ -110,7 +142,7 @@ A single keyword looks as follows:
 }
 ```
 
-…and a key-phrase:
+…and a key phrase:
 
 ```js
 {
@@ -125,13 +157,31 @@ A single keyword looks as follows:
 }
 ```
 
+##### `options`
+
+Configuration (optional).
+
 ###### `options.maximum`
 
 Try to detect at most `maximum` `words` and `phrases` (`number`, default: `5`).
 
 Note that actual counts may differ.
 For example, when two words have the same score, both will be returned.
-Or when too few words exist, less will be returned. the same goes for phrases.
+Or when too few words exist, less will be returned.
+The same goes for phrases.
+
+## Types
+
+This package is fully typed with [TypeScript][].
+It exports the additional types `Options`, `Keyphrase`, `PhraseMatch`,
+`Keyword`, `KeywordMatch`.
+
+## Compatibility
+
+Projects maintained by the unified collective are compatible with all maintained
+versions of Node.js.
+As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
+Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Contribute
 
@@ -177,18 +227,28 @@ abide by its terms.
 
 [npm]: https://docs.npmjs.com/cli/install
 
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[esmsh]: https://esm.sh
+
+[typescript]: https://www.typescriptlang.org
+
 [health]: https://github.com/retextjs/.github
 
-[contributing]: https://github.com/retextjs/.github/blob/HEAD/contributing.md
+[contributing]: https://github.com/retextjs/.github/blob/main/contributing.md
 
-[support]: https://github.com/retextjs/.github/blob/HEAD/support.md
+[support]: https://github.com/retextjs/.github/blob/main/support.md
 
-[coc]: https://github.com/retextjs/.github/blob/HEAD/code-of-conduct.md
+[coc]: https://github.com/retextjs/.github/blob/main/code-of-conduct.md
 
 [license]: license
 
 [author]: https://wooorm.com
 
+[unified]: https://github.com/unifiedjs/unified
+
 [retext]: https://github.com/retextjs/retext
 
 [term-extraction]: https://en.wikipedia.org/wiki/Terminology_extraction
+
+[vfile]: https://github.com/vfile/vfile

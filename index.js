@@ -22,7 +22,7 @@
  * @property {Array<PhraseMatch>} matches
  *
  * @typedef Keyword
- * @property {Array<KeywordMatch>} matches
+ * @property {Array<WordMatch>} matches
  * @property {number} score
  * @property {string} stem
  *
@@ -30,10 +30,13 @@
  * @property {Array<SentenceContent>} nodes
  * @property {Sentence} parent
  *
- * @typedef KeywordMatch
+ * @typedef WordMatch
  * @property {Word} node
  * @property {number} index
  * @property {Sentence} parent
+ *
+ * @typedef {WordMatch} KeywordMatch
+ *   To do: deprecate next major, use `WordMatch` instead.
  */
 
 import {stemmer} from 'stemmer'
@@ -232,7 +235,7 @@ function filterResults(results, maximum) {
 /**
  * Find the phrase surrounding a node.
  *
- * @param {KeywordMatch} match
+ * @param {WordMatch} match
  */
 function findPhrase(match) {
   const previous = findPhraseInDirection(match.parent, match.index, -1)
