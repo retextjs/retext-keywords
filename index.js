@@ -17,17 +17,17 @@
  * @typedef Keyphrase
  * @property {number} score
  * @property {number} weight
- * @property {string[]} stems
+ * @property {Array<string>} stems
  * @property {string} value
- * @property {PhraseMatch[]} matches
+ * @property {Array<PhraseMatch>} matches
  *
  * @typedef Keyword
- * @property {KeywordMatch[]} matches
+ * @property {Array<KeywordMatch>} matches
  * @property {number} score
  * @property {string} stem
  *
  * @typedef PhraseMatch
- * @property {SentenceContent[]} nodes
+ * @property {Array<SentenceContent>} nodes
  * @property {Sentence} parent
  *
  * @typedef KeywordMatch
@@ -66,11 +66,11 @@ export default function retextKeywords(options = {}) {
  */
 function findPhraseInDirection(parent, index, offset) {
   const children = parent.children
-  /** @type {SentenceContent[]} */
+  /** @type {Array<SentenceContent>} */
   const nodes = []
-  /** @type {string[]} */
+  /** @type {Array<string>} */
   const stems = []
-  /** @type {SentenceContent[]} */
+  /** @type {Array<SentenceContent>} */
   const queue = []
 
   while (children[(index += offset)]) {
@@ -99,7 +99,7 @@ function findPhraseInDirection(parent, index, offset) {
 function getKeyphrases(results, maximum) {
   /** @type {Record<string, Keyphrase>} */
   const stemmedPhrases = {}
-  /** @type {Word[]} */
+  /** @type {Array<Word>} */
   const initialWords = []
   /** @type {string} */
   let keyword
@@ -178,14 +178,14 @@ function getKeyphrases(results, maximum) {
  * @template {{score: number}} T
  * @param {Record<string, T>} results
  * @param {number} maximum
- * @returns {T[]}
+ * @returns {Array<T>}
  */
 function filterResults(results, maximum) {
-  /** @type {T[]} */
+  /** @type {Array<T>} */
   const filteredResults = []
-  /** @type {number[]} */
+  /** @type {Array<number>} */
   const indices = []
-  /** @type {Record<number, T[]>} */
+  /** @type {Record<number, Array<T>>} */
   const matrix = {}
   /** @type {string} */
   let key
@@ -250,10 +250,10 @@ function findPhrase(match) {
  * Merge a previous array, with a current value, and a following array.
  *
  * @template T
- * @param {T[]} previous
+ * @param {Array<T>} previous
  * @param {T} current
- * @param {T[]} next
- * @returns {T[]}
+ * @param {Array<T>} next
+ * @returns {Array<T>}
  */
 function merge(previous, current, next) {
   return [...[...previous].reverse(), current, ...next]
