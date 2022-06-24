@@ -1,4 +1,6 @@
 /**
+ * @typedef {import('./complex-types.js')} DoNotTouchAsThisIncludesVFileData
+ *
  * @typedef {import('nlcst').Root} Root
  * @typedef {import('nlcst').Sentence} Sentence
  * @typedef {import('nlcst').Word} Word

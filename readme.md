@@ -176,6 +176,22 @@ This package is fully typed with [TypeScript][].
 It exports the additional types `Options`, `Keyphrase`, `PhraseMatch`,
 `Keyword`, `KeywordMatch`.
 
+It also registers the `file.data` fields with `vfile`.
+If you’re working with the file, make sure to import this plugin somewhere in
+your types, as that registers the new fields on the file.
+
+```js
+/**
+ * @typedef {import('retext-keywords')}
+ */
+
+import {VFile} from 'vfile'
+
+const file = new VFile()
+
+console.log(file.data.keywords) //=> TS now knows the type of this.
+```
+
 ## Compatibility
 
 Projects maintained by the unified collective are compatible with all maintained
