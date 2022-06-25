@@ -81,7 +81,7 @@ import {retext} from 'retext'
 import retextPos from 'retext-pos'
 import retextKeywords from 'retext-keywords'
 
-const file = retext()
+const file = await retext()
   .use(retextPos) // Make sure to use `retext-pos` before `retext-keywords`.
   .use(retextKeywords)
   .process(await read('example.txt'))
