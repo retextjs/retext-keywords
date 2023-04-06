@@ -88,7 +88,7 @@ const file = await retext()
 
 console.log('Keywords:')
 file.data.keywords.forEach((keyword) => {
-  console.log(toString(keyword.matches[0].node))
+  console.log(keyword.matches[0].node.children[0].value);
 })
 
 console.log()
