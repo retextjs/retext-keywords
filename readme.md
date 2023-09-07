@@ -52,14 +52,14 @@ npm install retext-keywords
 In Deno with [`esm.sh`][esmsh]:
 
 ```js
-import retextKeywords from 'https://esm.sh/retext-keywords@7'
+import retextKeywords from 'https://esm.sh/retext-keywords@8'
 ```
 
 In browsers with [`esm.sh`][esmsh]:
 
 ```html
 <script type="module">
-  import retextKeywords from 'https://esm.sh/retext-keywords@7?bundle'
+  import retextKeywords from 'https://esm.sh/retext-keywords@8?bundle'
 </script>
 ```
 
