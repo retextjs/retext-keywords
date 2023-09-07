@@ -14,17 +14,16 @@ export {default} from './lib/index.js'
 declare module 'vfile' {
   interface DataMap {
     /**
-     * List of keywords.
-     *
-     * Populated by `retext-keywords` from the document.
-     */
-    keywords?: Keyword[]
-
-    /**
      * List of keyphrases.
      *
      * Populated by `retext-keywords` from the document.
      */
     keyphrases?: Keyphrase[]
+    /**
+     * List of keywords.
+     *
+     * Populated by `retext-keywords` from the document.
+     */
+    keywords?: Keyword[]
   }
 }

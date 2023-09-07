@@ -18,6 +18,11 @@
 *   [Use](#use)
 *   [API](#api)
     *   [`unified().use(retextKeywords[, options])`](#unifieduseretextkeywords-options)
+    *   [`Keyphrase`](#keyphrase)
+    *   [`Keyword`](#keyword)
+    *   [`Options`](#options)
+    *   [`PhraseMatch`](#phrasematch)
+    *   [`WordMatch`](#wordmatch)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
 *   [Contribute](#contribute)
@@ -38,7 +43,7 @@ process, so you might be better off manually providing a list of keywords.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, 16.0+, or 18.0+), install with [npm][]:
+In Node.js (version 16+), install with [npm][]:
 
 ```sh
 npm install retext-keywords
@@ -72,14 +77,14 @@ One of the first steps to model the knowledge domain of a virtual community is t
 Typically, approaches to automatic term extraction make use of linguistic processors (part of speech tagging, phrase chunking) to extract terminological candidates, i.e. syntactically plausible terminological noun phrases, NPs (e.g. compounds "credit card", adjective-NPs "local tourist information office", and prepositional-NPs "board of directors" - in English, the first two constructs are the most frequent). Terminological entries are then filtered from the candidate list using statistical and machine learning methods. Once filtered, because of their low ambiguity and high specificity, these terms are particularly useful for conceptualizing a knowledge domain or for supporting the creation of a domain ontology. Furthermore, terminology extraction is a very useful starting point for semantic similarity, knowledge management, human translation and machine translation, etc.
 ```
 
-…and our module `example.js` looks as follows:
+…and our module `example.js` contains:
 
 ```js
-import {read} from 'to-vfile'
 import {toString} from 'nlcst-to-string'
 import {retext} from 'retext'
-import retextPos from 'retext-pos'
 import retextKeywords from 'retext-keywords'
+import retextPos from 'retext-pos'
+import {read} from 'to-vfile'
 
 const file = await retext()
   .use(retextPos) // Make sure to use `retext-pos` before `retext-keywords`.
@@ -87,20 +92,24 @@ const file = await retext()
   .process(await read('example.txt'))
 
 console.log('Keywords:')
-file.data.keywords.forEach(function (keyword) {
-  console.log(toString(keyword.matches[0].node))
-})
+
+if (file.data.keywords) {
+  for (const keyword of file.data.keywords) {
+    console.log(toString(keyword.matches[0].node))
+  }
+}
 
 console.log()
 console.log('Key-phrases:')
-file.data.keyphrases.forEach(function (phrase) {
-  console.log(phrase.matches[0].nodes.map(function (d) {
-    return toString(d)
-  }).join(''))
-})
+
+if (file.data.keyphrases) {
+  for (const phrase of file.data.keyphrases) {
+    console.log(toString(phrase.matches[0].nodes))
+  }
+}
 ```
 
-…now running `node example.js` yields:
+…then running `node example.js` yields:
 
 ```txt
 Keywords:
@@ -121,62 +130,99 @@ communities
 ## API
 
 This package exports no identifiers.
-The default export is `retextKeywords`.
+The default export is [`retextKeywords`][api-retext-keywords].
 
 ### `unified().use(retextKeywords[, options])`
 
 Extract keywords and key phrases.
 
-The results are stored on `file.data.{keywords,keyphrases}`.
-Both are lists.
+The results are stored on `file.data.keyphrases`
+([`Array<Keyphrase>`][api-keyphrase]) and `file.data.keywords`
+([`Array<Keyword>`][api-keyword]).
 
-A single keyword looks as follows:
+###### Parameters
 
-```js
-{
-  stem: 'term',
-  score: 1,
-  matches: [
-    {node: Node, index: 5, parent: Node},
-    // …
-  ],
-  // …
-}
-```
+*   `options` ([`Options`][api-options], optional)
+    — configuration
 
-…and a key phrase:
+###### Returns
 
-```js
-{
-  score: 1,
-  weight: 11,
-  stems: ['terminolog', 'extract'],
-  value: 'terminolog extract',
-  matches:  [
-    {nodes: [Node, Node, Node], parent: Node},
-    // …
-  ]
-}
-```
+Transform ([`Transformer`][unified-transformer]).
 
-##### `options`
+### `Keyphrase`
 
-Configuration (optional).
+Info on a key phrase (TypeScript type).
 
-###### `options.maximum`
+###### Fields
 
-Try to detect at most `maximum` `words` and `phrases` (`number`, default: `5`).
+*   `matches` ([`Array<PhraseMatch>`][api-phrase-match])
+    — all matches
+*   `score` (`number`)
+    — score of phrase, for one match
+*   `stems` (`Array<string>`)
+    — stems of phrase
+*   `value` (`string`)
+    — joined stems
+*   `weight` (`number`)
+    — score of phrase, for all matches
 
-Note that actual counts may differ.
-For example, when two words have the same score, both will be returned.
-Or when too few words exist, less will be returned.
-The same goes for phrases.
+### `Keyword`
+
+Info on a keyword (TypeScript type).
+
+###### Fields
+
+*   `matches` ([`Array<WordMatch>`][api-word-match])
+    — all matches
+*   `score` (`number`)
+    — score of word, for all matches
+*   `stem` (`string`)
+    — stems of word
+
+### `Options`
+
+Configuration (TypeScript type).
+
+###### Fields
+
+*   `maximum` (`number`, default: `5`)
+    — try to detect at most `maximum` words and phrases; actual counts may
+    differ, for example, when two words have the same score, both will be
+    returned; when too few words exist, less will be returned
+
+### `PhraseMatch`
+
+Match (TypeScript type).
+
+###### Fields
+
+*   `nodes` ([`Array<Node>`][nlcst-node])
+    — matched nodes
+*   `parent` ([`Node`][nlcst-node])
+    — parent
+
+### `WordMatch`
+
+Match (TypeScript type).
+
+###### Fields
+
+*   `node` ([`Node`][nlcst-node])
+    — matched node
+*   `index` (`number`)
+    — index of `node` in `parent`
+*   `parent` ([`Node`][nlcst-node])
+    — parent
 
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional types `Options`, `Keyphrase`, `PhraseMatch`,
-`Keyword`, `KeywordMatch`.
+It exports the additional types
+[`Keyphrase`][api-keyphrase],
+[`Keyword`][api-keyword],
+[`Options`][api-options],
+[`PhraseMatch`][api-phrase-match], and
+[`WordMatch`][api-word-match].
 
 It also registers the `file.data` fields with `vfile`.
 If you’re working with the file, make sure to import this plugin somewhere in
@@ -191,15 +237,18 @@ import {VFile} from 'vfile'
 
 const file = new VFile()
 
-console.log(file.data.keywords) //=> TS now knows the type of this.
+console.log(file.data.keywords) //=> TS now knows this is `Array<Keyword> | undefined`.
 ```
 
 ## Compatibility
 
-Projects maintained by the unified collective are compatible with all maintained
+Projects maintained by the unified collective are compatible with maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
-Our projects sometimes work with older versions, but this is not guaranteed.
+
+When we cut a new major release, we drop support for unmaintained versions of
+Node.
+This means we try to keep the current release line, `retext-keywords@^7`,
+compatible with Node.js 12.
 
 ## Contribute
 
@@ -229,9 +278,9 @@ abide by its terms.
 
 [downloads]: https://www.npmjs.com/package/retext-keywords
 
-[size-badge]: https://img.shields.io/bundlephobia/minzip/retext-keywords.svg
+[size-badge]: https://img.shields.io/bundlejs/size/retext-keywords
 
-[size]: https://bundlephobia.com/result?p=retext-keywords
+[size]: https://bundlejs.com/?q=retext-keywords
 
 [sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
 
@@ -263,10 +312,26 @@ abide by its terms.
 
 [author]: https://wooorm.com
 
-[unified]: https://github.com/unifiedjs/unified
+[term-extraction]: https://en.wikipedia.org/wiki/Terminology_extraction
+
+[nlcst-node]: https://github.com/syntax-tree/nlcst?tab=readme-ov-file#nodes
 
 [retext]: https://github.com/retextjs/retext
 
-[term-extraction]: https://en.wikipedia.org/wiki/Terminology_extraction
+[unified]: https://github.com/unifiedjs/unified
+
+[unified-transformer]: https://github.com/unifiedjs/unified#transformer
 
 [vfile]: https://github.com/vfile/vfile
+
+[api-keyphrase]: #keyphrase
+
+[api-keyword]: #keyword
+
+[api-options]: #options
+
+[api-phrase-match]: #phrasematch
+
+[api-retext-keywords]: #unifieduseretextkeywords-options
+
+[api-word-match]: #wordmatch
