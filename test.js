@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {retext} from 'retext'
+import retextKeywords from 'retext-keywords'
 import retextPos from 'retext-pos'
-import retextKeywords from './index.js'
 
 // Fixture: First three paragraphs on Term Extraction from Wikipedia:
 // https://en.wikipedia.org/wiki/Terminology_extraction.
@@ -48,7 +48,7 @@ const fixture =
 
 test('retext-keywords', async function (t) {
   await t.test('should expose the public api', async function () {
-    assert.deepEqual(Object.keys(await import('./index.js')).sort(), [
+    assert.deepEqual(Object.keys(await import('retext-keywords')).sort(), [
       'default'
     ])
   })
