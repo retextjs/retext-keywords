@@ -47,6 +47,12 @@ const fixture =
   'and machine translation, etc. constructor.'
 
 test('retext-keywords', async function (t) {
+  await t.test('should expose the public api', async function () {
+    assert.deepEqual(Object.keys(await import('./index.js')).sort(), [
+      'default'
+    ])
+  })
+
   const file = await retext()
     .use(retextPos)
     .use(retextKeywords)

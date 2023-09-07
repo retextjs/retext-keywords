@@ -1,11 +1,12 @@
-import type {Keyword, Keyphrase} from './lib/index.js'
+import type {Keyphrase, Keyword} from './lib/index.js'
 
 export type {
   Keyphrase,
   Keyword,
   KeywordMatch,
   Options,
-  PhraseMatch
+  PhraseMatch,
+  WordMatch
 } from './lib/index.js'
 
 export {default} from './lib/index.js'

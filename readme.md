@@ -87,14 +87,16 @@ const file = await retext()
   .process(await read('example.txt'))
 
 console.log('Keywords:')
-file.data.keywords.forEach((keyword) => {
+file.data.keywords.forEach(function (keyword) {
   console.log(toString(keyword.matches[0].node))
 })
 
 console.log()
 console.log('Key-phrases:')
-file.data.keyphrases.forEach((phrase) => {
-  console.log(phrase.matches[0].nodes.map((d) => toString(d)).join(''))
+file.data.keyphrases.forEach(function (phrase) {
+  console.log(phrase.matches[0].nodes.map(function (d) {
+    return toString(d)
+  }).join(''))
 })
 ```
 
