@@ -113,7 +113,6 @@ test('retext-keywords', async function (t) {
         matches: [],
         score: 1,
         stems: ['terminolog', 'extract'],
-        value: 'terminolog extract',
         weight: 11
       }
     )

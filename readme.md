@@ -161,8 +161,6 @@ Info on a key phrase (TypeScript type).
     — score of phrase, for one match
 *   `stems` (`Array<string>`)
     — stems of phrase
-*   `value` (`string`)
-    — joined stems
 *   `weight` (`number`)
     — score of phrase, for all matches
 
