@@ -275,7 +275,7 @@ function getImportantWords(node) {
 
   visit(node, 'WordNode', (word, index, parent_) => {
     const parent = /** @type {Sentence} */ (parent_)
-    if (parent && index !== null && important(word)) {
+    if (parent && index !== undefined && important(word)) {
       const stem = stemNode(word)
       const match = {node: word, index, parent}
 
