@@ -3,7 +3,6 @@ import type {Keyphrase, Keyword} from './lib/index.js'
 export type {
   Keyphrase,
   Keyword,
-  KeywordMatch,
   Options,
   PhraseMatch,
   WordMatch
