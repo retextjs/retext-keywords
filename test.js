@@ -1,5 +1,5 @@
-import assert from 'node:assert'
-import test from 'tape'
+import assert from 'node:assert/strict'
+import test from 'node:test'
 import {retext} from 'retext'
 import retextPos from 'retext-pos'
 import retextKeywords from './index.js'
@@ -46,75 +46,128 @@ const fixture =
   'semantic similarity, knowledge management, human translation ' +
   'and machine translation, etc. constructor.'
 
-test('retext-keywords', (t) => {
-  t.plan(15)
-
-  retext()
+test('retext-keywords', async function (t) {
+  const file = await retext()
     .use(retextPos)
     .use(retextKeywords)
     .process(fixture)
-    .then((file) => {
-      t.ok(Array.isArray(file.data.keywords), 'keywords')
-      t.ok(Array.isArray(file.data.keyphrases), 'keywords')
-      assert(file.data.keywords, 'ts')
-      assert(file.data.keyphrases, 'ts')
 
-      t.deepEqual(
-        file.data.keywords.map((d) => Math.round(d.score * 1e2) / 1e2),
-        [1, 1, 0.71, 0.71, 0.57, 0.57],
-        'keywords[n].score'
-      )
-      t.ok(
-        file.data.keywords.every((d) => 'stem' in d),
-        'keywords[n].stem'
-      )
-      t.ok(
-        file.data.keywords.every((d) => 'matches' in d),
-        'keywords[n].matches'
-      )
-      t.ok(
-        file.data.keywords.every((d) => d.matches.every((d) => 'node' in d)),
-        'keywords[n].matches[n].node'
-      )
-      t.ok(
-        file.data.keywords.every((d) => d.matches.every((d) => 'parent' in d)),
-        'keywords[n].matches[n].parent'
-      )
-      t.ok(
-        file.data.keywords.every((d) => d.matches.every((d) => 'index' in d)),
-        'keywords[n].matches[n].index'
-      )
+  await t.test('should expose `keywords` as an array', async function () {
+    assert.ok(Array.isArray(file.data.keywords))
+  })
 
-      t.deepEqual(
-        file.data.keyphrases.map((d) => Math.round(d.score * 1e2) / 1e2),
-        [1, 0.55, 0.53, 0.24, 0.18],
-        'keyphrases[n].score'
-      )
-      t.ok(
-        file.data.keyphrases.every((d) => 'weight' in d),
-        'keyphrases[n].weight'
-      )
-      t.ok(
-        file.data.keyphrases.every((d) => 'value' in d),
-        'keyphrases[n].value'
-      )
-      t.ok(
-        file.data.keyphrases.every((d) => 'stems' in d),
-        'keyphrases[n].stems'
-      )
-      t.ok(
-        file.data.keyphrases.every((d) => 'matches' in d),
-        'keyphrases[n].matches'
-      )
-      t.ok(
-        file.data.keyphrases.every((d) => d.matches.every((d) => 'nodes' in d)),
-        'keyphrases[n].matches[n].nodes'
-      )
-      t.ok(
-        file.data.keyphrases.every((d) =>
-          d.matches.every((d) => 'parent' in d)
-        ),
-        'keyphrases[n].matches[n].parent'
-      )
-    }, t.ifErr)
+  await t.test('should expose a keyword', async function () {
+    assert(file.data.keywords)
+    assert.deepEqual(
+      {...file.data.keywords[0], matches: []},
+      {matches: [], score: 1, stem: 'term'}
+    )
+  })
+
+  await t.test('should expose `matches` on keywords', async function () {
+    assert(file.data.keywords)
+    const keyword = file.data.keywords[0]
+    const match = keyword.matches[0]
+    assert.deepEqual(
+      {...match, parent: undefined},
+      {
+        node: {
+          type: 'WordNode',
+          children: [
+            {
+              type: 'TextNode',
+              value: 'term',
+              position: {
+                start: {line: 1, column: 21, offset: 20},
+                end: {line: 1, column: 25, offset: 24}
+              }
+            }
+          ],
+          position: {
+            start: {line: 1, column: 21, offset: 20},
+            end: {line: 1, column: 25, offset: 24}
+          },
+          data: {partOfSpeech: 'NN'}
+        },
+        index: 5,
+        parent: undefined
+      }
+    )
+  })
+
+  await t.test('should expose `keyphrases` as an array', async function () {
+    assert.ok(Array.isArray(file.data.keyphrases))
+  })
+
+  await t.test('should expose a keyphrase', async function () {
+    assert(file.data.keyphrases)
+    assert.deepEqual(
+      {...file.data.keyphrases[0], matches: []},
+      {
+        matches: [],
+        score: 1,
+        stems: ['terminolog', 'extract'],
+        value: 'terminolog extract',
+        weight: 11
+      }
+    )
+  })
+
+  await t.test('should expose `matches` on keyphrases', async function () {
+    assert(file.data.keyphrases)
+    const keyphrase = file.data.keyphrases[0]
+    const match = keyphrase.matches[0]
+    assert.deepEqual(
+      {...match, parent: undefined},
+      {
+        nodes: [
+          {
+            type: 'WordNode',
+            children: [
+              {
+                type: 'TextNode',
+                value: 'terminology',
+                position: {
+                  start: {line: 1, column: 132, offset: 131},
+                  end: {line: 1, column: 143, offset: 142}
+                }
+              }
+            ],
+            position: {
+              start: {line: 1, column: 132, offset: 131},
+              end: {line: 1, column: 143, offset: 142}
+            },
+            data: {partOfSpeech: 'NN'}
+          },
+          {
+            type: 'WhiteSpaceNode',
+            value: ' ',
+            position: {
+              start: {line: 1, column: 143, offset: 142},
+              end: {line: 1, column: 144, offset: 143}
+            }
+          },
+          {
+            type: 'WordNode',
+            children: [
+              {
+                type: 'TextNode',
+                value: 'extraction',
+                position: {
+                  start: {line: 1, column: 144, offset: 143},
+                  end: {line: 1, column: 154, offset: 153}
+                }
+              }
+            ],
+            position: {
+              start: {line: 1, column: 144, offset: 143},
+              end: {line: 1, column: 154, offset: 153}
+            },
+            data: {partOfSpeech: 'NN'}
+          }
+        ],
+        parent: undefined
+      }
+    )
+  })
 })
