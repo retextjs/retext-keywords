@@ -1,15 +1,49 @@
-html {
-  font-family: system-ui;
-  background-color: hsl(0, 0%, 95%);
-  word-break: break-word;
+* {
+  box-sizing: border-box;
+  line-height: calc(1em + 1ex);
+}
+
+a {
+  color: #0367d8;
+  text-decoration: none;
+  transition: 200ms;
+  transition-property: color;
+}
+
+a:focus,
+a:hover,
+a:target {
+  color: inherit;
 }
 
 body {
   margin: 0;
 }
 
+code {
+  font-size: 16px;
+}
+
+h1,
+p {
+  margin-bottom: calc(1em + 1ex);
+  margin-top: calc(1em + 1ex);
+}
+
+h1 {
+  font-size: 3em;
+  font-weight: 100;
+  text-align: center;
+}
+
+html {
+  background-color: hsl(0deg 0% 95%);
+  font-family: system-ui;
+  word-break: break-word;
+}
+
 main {
-  background-color: hsl(0, 0%, 97.5%);
+  background-color: hsl(0deg 0% 97.5%);
   position: relative;
   max-width: 40em;
   margin: 0 auto;
@@ -21,23 +55,15 @@ main > div {
 }
 
 section {
-  margin: calc(2em + 2ex) calc(-2em - 2ex);
-  padding: calc(2em + 2ex);
-  border: 0 solid hsl(214, 13%, 90%);
+  border: 0 solid hsl(214deg 13% 90%);
   border-top-width: 1px;
   border-bottom-width: 1px;
+  margin: calc(2em + 2ex) calc(-2em - 2ex);
+  padding: calc(2em + 2ex);
 }
 
 section + section {
   margin-top: calc(-2em - 2ex - 1px);
-}
-
-section > :first-child {
-  margin-top: 0;
-}
-
-section > :last-child {
-  margin-bottom: 0;
 }
 
 section:first-child {
@@ -54,120 +80,95 @@ section:last-child {
   margin-bottom: 0;
 }
 
-.highlight {
-  background-color: hsl(0, 0%, 100%);
+section > :first-child {
+  margin-top: 0;
 }
 
-* {
-  line-height: calc(1em + 1ex);
-  box-sizing: border-box;
-}
-
-p,
-h1 {
-  margin-top: calc(1em + 1ex);
-  margin-bottom: calc(1em + 1ex);
-}
-
-h1 {
-  font-size: 3em;
-  font-weight: 100;
-  text-align: center;
-}
-
-a {
-  text-decoration: none;
-  color: #0367d8;
-  transition: 200ms;
-  transition-property: color;
-}
-
-a:hover,
-a:focus,
-a:target {
-  color: inherit;
-}
-
-code {
-  font-size: 16px;
+section > :last-child {
+  margin-bottom: 0;
 }
 
 template {
   display: none;
 }
 
-.editor {
-  position: relative;
-  max-width: 100%;
-  overflow: hidden;
-}
-
 textarea,
 .draw {
   /* Can’t use a nice font: kerning renders differently in textareas. */
-  font-family: monospace;
-  font-size: 16px;
-  letter-spacing: normal;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  word-wrap: break-word;
   background: transparent;
   box-sizing: border-box;
   border: none;
-  outline: none;
-  margin: 0;
-  padding: 0;
-  width: 100%;
+  font-family: monospace;
+  font-size: 16px;
   height: 100%;
+  letter-spacing: normal;
+  line-height: 1.5;
+  margin: 0;
+  outline: none;
   overflow: hidden;
+  padding: 0;
   resize: none;
-}
-
-.draw {
-  -webkit-print-color-adjust: exact;
-  color: transparent;
+  white-space: pre-wrap;
+  width: 100%;
+  word-wrap: break-word;
 }
 
 textarea {
+  color: inherit;
   position: absolute;
   top: 0;
-  color: inherit;
 }
 
 .credits {
   text-align: center;
 }
 
-@media (min-width: 40em) and (min-height: 20em) {
+.draw {
+  -webkit-print-color-adjust: exact;
+  color: transparent;
+  print-color-adjust: exact;
+}
+
+.editor {
+  overflow: hidden;
+  position: relative;
+  max-width: 100%;
+}
+
+.highlight {
+  background-color: hsl(0deg 0% 100%);
+}
+
+@media (width >= 40em) and (height >= 20em) {
   main {
     /* Go all Tschichold when supported */
-    margin: 11.1vh 22.2vw 22.2vh 11.1vw;
-    border: 1px solid hsl(214, 13%, 90%);
+    border: 1px solid hsl(214deg 13% 90%);
     border-radius: 3px;
+    margin: 11.1vh 22.2vw 22.2vh 11.1vw;
   }
 }
 
 @media (prefers-color-scheme: dark) {
   html {
-    background-color: hsl(214, 13%, 7.5%);
-    color: hsl(214, 13%, 95%);
+    background-color: hsl(214deg 13% 7.5%);
+    color: hsl(214deg 13% 95%);
   }
 
   main {
-    background-color: hsl(214, 13%, 5%);
+    background-color: hsl(214deg 13% 5%);
   }
 
-  @media (min-width: 40em) and (min-height: 20em) {
+  @media (width >= 40em) and (height >= 20em) {
     main {
-      border-color: hsl(214, 13%, 12.5%);
+      border-color: hsl(214deg 13% 12.5%);
     }
   }
 
-  .highlight {
-    background-color: hsl(214, 13%, 2.5%);
+  section {
+    border-color: hsl(214deg 13% 12.5%);
   }
 
-  section {
-    border-color: hsl(214, 13%, 12.5%);
+  .highlight {
+    background-color: hsl(214deg 13% 2.5%);
   }
 }

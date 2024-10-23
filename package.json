@@ -1,68 +1,45 @@
 {
-  "name": "www-retext-keywords",
-  "private": true,
-  "license": "MIT",
-  "repository": "retextjs/retext-keywords",
-  "bugs": "https://github.com/retextjs/retext-keywords/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
-  "contributors": [
-    "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
-  ],
-  "devDependencies": {
-    "browserify": "^16.0.0",
-    "cssnano": "^4.0.0",
-    "debounce": "^1.0.0",
-    "global": "^4.0.0",
-    "postcss-cli": "^6.0.0",
-    "postcss-preset-env": "^6.0.0",
-    "prettier": "^1.0.0",
-    "rehype-cli": "^8.0.0",
-    "rehype-preset-minify": "^4.0.0",
-    "rehype-prevent-favicon-request": "^2.0.0",
-    "remark-cli": "^7.0.0",
-    "retext-pos": "^2.0.0",
-    "remark-preset-wooorm": "^6.0.0",
-    "retext-english": "^3.0.0",
-    "retext-keywords": "^5.0.0",
-    "stylelint": "^11.0.0",
-    "stylelint-config-standard": "^19.0.0",
-    "tinyify": "^2.0.0",
-    "unified": "^8.0.0",
-    "vfile": "^4.0.0",
-    "virtual-dom": "^2.0.0",
-    "xo": "^0.25.0"
-  },
-  "scripts": {
-    "format": "remark . -qfo && prettier --write \"**/*.js\" && xo --fix && stylelint src/index.css --fix",
-    "build:js": "browserify src -p tinyify -o dest/index.js",
-    "build:css": "postcss src/index.css -o dest/index.css",
-    "build:html": "rehype -u preset-minify -u prevent-favicon-request src -o dest",
-    "build": "npm run build:js && npm run build:css && npm run build:html",
-    "test": "npm run format && npm run build"
-  },
-  "prettier": {
-    "tabWidth": 2,
-    "useTabs": false,
-    "singleQuote": true,
-    "bracketSpacing": false,
-    "semi": false,
-    "trailingComma": "none"
-  },
-  "xo": {
-    "prettier": true,
-    "esnext": false,
-    "rules": {
-      "unicorn/prefer-node-append": "off"
-    }
-  },
-  "stylelint": {
-    "extends": "stylelint-config-standard"
-  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
   ],
+  "bugs": "https://github.com/retextjs/retext-keywords/issues",
+  "contributors": [
+    "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
+  ],
+  "devDependencies": {
+    "@types/nlcst": "^2.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "cssnano": "^7.0.0",
+    "devlop": "^1.0.0",
+    "esbuild": "^0.24.0",
+    "postcss-cli": "^11.0.0",
+    "postcss-preset-env": "^10.0.0",
+    "prettier": "^3.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "rehype-cli": "^12.0.0",
+    "rehype-preset-minify": "^7.0.0",
+    "rehype-prevent-favicon-request": "^4.0.0",
+    "remark-cli": "^12.0.0",
+    "remark-preset-wooorm": "^10.0.0",
+    "retext-english": "^5.0.0",
+    "retext-keywords": "^8.0.0",
+    "retext-pos": "^5.0.0",
+    "retext-stringify": "^4.0.0",
+    "stylelint": "^16.0.0",
+    "stylelint-config-standard": "^36.0.0",
+    "type-coverage": "^2.0.0",
+    "typescript": "^5.0.0",
+    "unified": "^11.0.0",
+    "vfile": "^6.0.0",
+    "xo": "^0.59.0"
+  },
+  "license": "MIT",
+  "name": "www-retext-keywords",
   "postcss": {
     "plugins": {
       "postcss-preset-env": {},
@@ -71,9 +48,44 @@
       }
     }
   },
+  "prettier": {
+    "bracketSpacing": false,
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "none",
+    "useTabs": false
+  },
+  "private": true,
   "remarkConfig": {
     "plugins": [
-      "preset-wooorm"
+      "remark-preset-wooorm"
     ]
+  },
+  "repository": "retextjs/retext-keywords",
+  "typeCoverage": {
+    "atLeast": 100,
+    "strict": true
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build --clean && tsc --build && type-coverage",
+    "format": "remark --frail --output --quiet -- . && prettier --log-level warn --write -- . && xo && stylelint src/index.css --fix",
+    "generate:css": "postcss --output dest/index.css -- src/index.css",
+    "generate:html": "rehype --frail --output dest/ --quiet --use rehype-preset-minify --use rehype-prevent-favicon-request -- src/",
+    "generate:js:module": "esbuild src/index.jsx --bundle --conditions=browser,production --define:process.env.NODE_ENV=\\\"production\\\" --format=esm --loader:.js=jsx --log-level=warning --minify --outfile=dest/index.module.js --target=es2020",
+    "generate:js:nomodule": "esbuild src/index.jsx --bundle --conditions=browser,production --define:process.env.NODE_ENV=\\\"production\\\" --loader:.js=jsx --log-level=warning --minify --outfile=dest/index.nomodule.js --target=es6",
+    "generate:js": "npm run generate:js:module && npm run generate:js:nomodule",
+    "generate": "npm run generate:css && npm run generate:html && npm run generate:js",
+    "test": "npm run build && npm run format && npm run generate"
+  },
+  "stylelint": {
+    "extends": "stylelint-config-standard"
+  },
+  "xo": {
+    "prettier": true,
+    "rules": {
+      "logical-assignment-operators": "off"
+    }
   }
 }
