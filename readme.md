@@ -228,7 +228,7 @@ your types, as that registers the new fields on the file.
 
 ```js
 /**
- * @typedef {import('retext-keywords')}
+ * @import {} from 'retext-keywords'
  */
 
 import {VFile} from 'vfile'
