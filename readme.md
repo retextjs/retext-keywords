@@ -12,21 +12,21 @@
 
 ## Contents
 
-*   [What is this?](#what-is-this)
-*   [When should I use this?](#when-should-i-use-this)
-*   [Install](#install)
-*   [Use](#use)
-*   [API](#api)
-    *   [`unified().use(retextKeywords[, options])`](#unifieduseretextkeywords-options)
-    *   [`Keyphrase`](#keyphrase)
-    *   [`Keyword`](#keyword)
-    *   [`Options`](#options)
-    *   [`PhraseMatch`](#phrasematch)
-    *   [`WordMatch`](#wordmatch)
-*   [Types](#types)
-*   [Compatibility](#compatibility)
-*   [Contribute](#contribute)
-*   [License](#license)
+* [What is this?](#what-is-this)
+* [When should I use this?](#when-should-i-use-this)
+* [Install](#install)
+* [Use](#use)
+* [API](#api)
+  * [`unified().use(retextKeywords[, options])`](#unifieduseretextkeywords-options)
+  * [`Keyphrase`](#keyphrase)
+  * [`Keyword`](#keyword)
+  * [`Options`](#options)
+  * [`PhraseMatch`](#phrasematch)
+  * [`WordMatch`](#wordmatch)
+* [Types](#types)
+* [Compatibility](#compatibility)
+* [Contribute](#contribute)
+* [License](#license)
 
 ## What is this?
 
@@ -142,8 +142,8 @@ The results are stored on `file.data.keyphrases`
 
 ###### Parameters
 
-*   `options` ([`Options`][api-options], optional)
-    — configuration
+* `options` ([`Options`][api-options], optional)
+  — configuration
 
 ###### Returns
 
@@ -155,14 +155,14 @@ Info on a key phrase (TypeScript type).
 
 ###### Fields
 
-*   `matches` ([`Array<PhraseMatch>`][api-phrase-match])
-    — all matches
-*   `score` (`number`)
-    — score of phrase, for one match
-*   `stems` (`Array<string>`)
-    — stems of phrase
-*   `weight` (`number`)
-    — score of phrase, for all matches
+* `matches` ([`Array<PhraseMatch>`][api-phrase-match])
+  — all matches
+* `score` (`number`)
+  — score of phrase, for one match
+* `stems` (`Array<string>`)
+  — stems of phrase
+* `weight` (`number`)
+  — score of phrase, for all matches
 
 ### `Keyword`
 
@@ -170,12 +170,12 @@ Info on a keyword (TypeScript type).
 
 ###### Fields
 
-*   `matches` ([`Array<WordMatch>`][api-word-match])
-    — all matches
-*   `score` (`number`)
-    — score of word, for all matches
-*   `stem` (`string`)
-    — stems of word
+* `matches` ([`Array<WordMatch>`][api-word-match])
+  — all matches
+* `score` (`number`)
+  — score of word, for all matches
+* `stem` (`string`)
+  — stems of word
 
 ### `Options`
 
@@ -183,10 +183,10 @@ Configuration (TypeScript type).
 
 ###### Fields
 
-*   `maximum` (`number`, default: `5`)
-    — try to detect at most `maximum` words and phrases; actual counts may
-    differ, for example, when two words have the same score, both will be
-    returned; when too few words exist, less will be returned
+* `maximum` (`number`, default: `5`)
+  — try to detect at most `maximum` words and phrases; actual counts may
+  differ, for example, when two words have the same score, both will be
+  returned; when too few words exist, less will be returned
 
 ### `PhraseMatch`
 
@@ -194,10 +194,10 @@ Match (TypeScript type).
 
 ###### Fields
 
-*   `nodes` ([`Array<Node>`][nlcst-node])
-    — matched nodes
-*   `parent` ([`Node`][nlcst-node])
-    — parent
+* `nodes` ([`Array<Node>`][nlcst-node])
+  — matched nodes
+* `parent` ([`Node`][nlcst-node])
+  — parent
 
 ### `WordMatch`
 
@@ -205,12 +205,12 @@ Match (TypeScript type).
 
 ###### Fields
 
-*   `node` ([`Node`][nlcst-node])
-    — matched node
-*   `index` (`number`)
-    — index of `node` in `parent`
-*   `parent` ([`Node`][nlcst-node])
-    — parent
+* `node` ([`Node`][nlcst-node])
+  — matched node
+* `index` (`number`)
+  — index of `node` in `parent`
+* `parent` ([`Node`][nlcst-node])
+  — parent
 
 ## Types
 
