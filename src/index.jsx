@@ -77,7 +77,7 @@ function Playground() {
             Fork this website
           </a>{' '}
           •{' '}
-          <a href="https://github.com/retextjs/retext-keywords/markdown-tm-language/blob/src/license">
+          <a href="https://github.com/retextjs/retext-keywords/blob/main/license">
             MIT
           </a>{' '}
           • <a href="https://github.com/wooorm">@wooorm</a>
